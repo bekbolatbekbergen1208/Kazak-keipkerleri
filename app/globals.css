@@ -2176,3 +2176,384 @@ footer .emblem svg {
     object-position: 50% 18%;
   }
 }
+.national-section {
+  margin-top: 48px;
+}
+.national-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.national-card {
+  padding: 26px;
+  text-align: left;
+  background:
+    radial-gradient(ellipse at 80% 0, #85693128, transparent 65%),
+    linear-gradient(145deg, #142b31, #0b1921);
+  border: 1px solid #cbb38138;
+  border-radius: 9px;
+  position: relative;
+  overflow: hidden;
+}
+.national-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+}
+.national-symbol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  font-size: 43px;
+  color: var(--gold);
+  border: 1px solid #cfb37c44;
+  border-radius: 50%;
+  background: #c6a97709;
+  margin-bottom: 24px;
+}
+.national-card > small {
+  display: block;
+  color: var(--teal);
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+.national-card h3 {
+  font-size: 23px;
+  margin-bottom: 12px;
+}
+.national-card > p {
+  font-size: 12px;
+  min-height: 42px;
+}
+.national-game h2 {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+.national-game > p {
+  font-size: 12px;
+}
+.national-toolbar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 20px 0;
+}
+.national-toolbar select {
+  max-width: 190px;
+  margin: 0;
+}
+.national-toolbar > button:last-child {
+  margin-left: auto;
+  color: var(--gold);
+}
+.national-rules {
+  padding: 18px 20px;
+  margin: 15px 0;
+  background: #a9c6b00a;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+}
+.national-rules p {
+  font-size: 11px;
+  margin-bottom: 12px;
+}
+.national-rules a {
+  font-size: 10px;
+  color: var(--gold);
+}
+.togyz-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #0a1820;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin: 22px 0 14px;
+}
+.togyz-score > span {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+}
+.togyz-score strong {
+  display: block;
+  font-size: 29px;
+  color: var(--gold);
+  margin-top: 6px;
+}
+.togyz-score .togyz-turn {
+  font-size: 12px;
+  color: var(--teal);
+}
+.togyz-turn small {
+  display: block;
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 7px;
+}
+.togyz-board {
+  padding: 18px 12px;
+  border: 2px solid #a68b5e88;
+  border-radius: 14px;
+  background: linear-gradient(140deg, #5b4730, #302e26);
+  box-shadow: inset 0 0 30px #0005;
+}
+.pit-row {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 8px;
+}
+.pit-row + .pit-row {
+  margin-top: 14px;
+}
+.togyz-pit {
+  border: 1px solid #b09a734d;
+  border-radius: 25px;
+  padding: 7px 3px;
+  background: #151d1cd6;
+  box-shadow: inset 0 3px 12px #0008;
+  min-height: 102px;
+}
+.togyz-pit:disabled {
+  opacity: 0.72;
+}
+.togyz-pit:not(:disabled) {
+  border-color: var(--gold);
+  background: #423d29;
+}
+.togyz-pit small {
+  color: #a59679;
+  font-size: 9px;
+  display: block;
+}
+.togyz-pit strong {
+  color: var(--gold);
+  font-size: 15px;
+}
+.pit-stones {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  min-height: 45px;
+  padding: 5px;
+  margin: 5px 0;
+}
+.pit-stones i {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff1bf, #a08959);
+  box-shadow: 1px 2px 3px #0008;
+}
+.togyz-pit.tuzdyk {
+  border-color: var(--teal);
+  background: #36655766;
+}
+.asyk-field,
+.tenge-field {
+  position: relative;
+  overflow: hidden;
+  height: 280px;
+  margin: 24px 0;
+  border: 1px solid #b6a27955;
+  border-radius: 9px;
+  background:
+    radial-gradient(ellipse at center, #8d77553d, transparent 75%),
+    linear-gradient(180deg, #243b36, #153028);
+}
+.asyk-ring {
+  position: absolute;
+  left: 18%;
+  top: 18%;
+  width: 55%;
+  height: 55%;
+  border: 2px dashed #d7c38a88;
+  border-radius: 50%;
+}
+.asyk-bone,
+.saka {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+  color: #f2dcb4;
+  text-shadow: 2px 4px 4px #0006;
+  line-height: 1;
+  transition:
+    opacity 0.4s,
+    transform 0.4s;
+}
+.asyk-bone.hit {
+  opacity: 0.18;
+  transform: translate(100px, -50px) rotate(100deg);
+}
+.saka {
+  color: #e07e52;
+  font-size: 36px;
+}
+.saka.flying {
+  animation: saka-throw 0.45s ease-out;
+}
+.asyk-aim {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: #79d7b6;
+  line-height: 1;
+  opacity: 0.7;
+}
+.field-score {
+  position: absolute;
+  top: 15px;
+  right: 18px;
+  font-size: 10px;
+  color: var(--gold);
+}
+.aim-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+.aim-controls input {
+  margin-top: 10px;
+}
+.tenge-field {
+  background:
+    linear-gradient(0deg, #112d28d9, #0e302a33),
+    url("/art/steppe.svg") center/cover;
+}
+.tenge-field:after {
+  content: "";
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #d5b57b50;
+}
+.tenge-rider {
+  position: absolute;
+  bottom: 36px;
+  left: 20%;
+  font-size: 85px;
+  line-height: 1;
+  color: #e1c599;
+  transition: transform 0.18s;
+  z-index: 2;
+}
+.tenge-rider.lean {
+  transform: rotate(30deg) translate(10px, 10px);
+}
+.tenge-token {
+  position: absolute;
+  bottom: 31px;
+  font-size: 30px;
+  line-height: 1;
+  color: #efd589;
+}
+.pickup-zone {
+  position: absolute;
+  left: 12%;
+  width: 24%;
+  top: 15%;
+  bottom: 30px;
+  border-left: 1px dashed #d4bb7977;
+  border-right: 1px dashed #d4bb7977;
+  background: #d4bb790b;
+}
+@keyframes saka-throw {
+  from {
+    transform: translate(-50%, 130px) scale(0.7);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+@media (max-width: 760px) {
+  .national-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .national-card {
+    padding: 23px;
+  }
+  .national-symbol {
+    float: right;
+    width: 57px;
+    height: 57px;
+    font-size: 34px;
+    margin-left: 10px;
+  }
+  .national-card h3 {
+    font-size: 22px;
+  }
+  .national-card > p {
+    min-height: auto;
+  }
+  .national-section {
+    margin-top: 35px;
+  }
+  .national-toolbar {
+    gap: 12px;
+  }
+  .national-toolbar select {
+    max-width: 150px;
+    font-size: 10px;
+  }
+  .togyz-board {
+    padding: 12px 6px;
+  }
+  .pit-row {
+    gap: 3px;
+  }
+  .togyz-pit {
+    min-height: 86px;
+    border-radius: 16px;
+    padding: 6px 0;
+  }
+  .pit-stones {
+    gap: 2px;
+    padding: 2px;
+    min-height: 38px;
+  }
+  .pit-stones i {
+    width: 5px;
+    height: 5px;
+  }
+  .togyz-pit strong {
+    font-size: 12px;
+  }
+  .togyz-score {
+    padding: 13px 8px;
+    gap: 6px;
+  }
+  .togyz-score > span {
+    font-size: 8px;
+  }
+  .togyz-score .togyz-turn {
+    font-size: 10px;
+  }
+  .togyz-score strong {
+    font-size: 24px;
+  }
+  .asyk-field,
+  .tenge-field {
+    height: 235px;
+  }
+  .asyk-bone {
+    font-size: 31px;
+  }
+  .aim-controls {
+    gap: 16px;
+  }
+  .national-game h2 {
+    font-size: 26px;
+  }
+  .national-game > p {
+    font-size: 11px;
+  }
+}

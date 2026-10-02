@@ -8,7 +8,7 @@
     "start": "next start --hostname 0.0.0.0",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test:game": "tsx --test tests/progression.test.ts",
+    "test:game": "tsx --test tests/*.test.ts",
     "test:e2e": "playwright test",
     "seed:sql": "tsx scripts/seed.ts"
   },

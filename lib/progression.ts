@@ -17,6 +17,7 @@ export const freshPlayer = (): Player => ({
   coins: 0,
   stats: { strength: 20, wisdom: 20, courage: 20, agility: 20, eloquence: 20 },
   completed: [],
+  nationalCompleted: [],
   missionProgress: {},
   unlocked: ["tostik"],
   achievements: [],
@@ -42,6 +43,7 @@ export function reconcile(p: Player): Player {
   if (p.completed.length >= 6) a.add("six");
   return {
     ...p,
+    nationalCompleted: p.nationalCompleted ?? [],
     unlocked,
     achievements: [...a],
     daily:

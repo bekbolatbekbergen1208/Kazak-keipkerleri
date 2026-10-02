@@ -30,6 +30,8 @@ import PlayerPortrait from "@/components/heroes/PlayerPortrait";
 import Emblem from "@/components/ui-emblem";
 import WorldMap from "@/components/map/WorldMap";
 import MiniGame from "./MiniGame";
+import NationalGame, { NationalGamesShelf } from "./national/NationalGames";
+import { nationalGames, type NationalKind } from "@/data/national-games";
 import {
   achievements,
   dailyTemplates,
@@ -83,6 +85,7 @@ export default function Game() {
   const [toast, setToast] = useState("");
   const [modal, setModal] = useState<"settings" | "auth" | null>(null);
   const [introStep, setIntroStep] = useState(0);
+  const [national, setNational] = useState<NationalKind | null>(null);
   const [practice, setPractice] = useState<GameKind | null>(null);
   const [tab, setTab] = useState("Барлық уақыт");
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
@@ -530,6 +533,10 @@ export default function Game() {
                         </button>
                       ))}
                     </div>
+                    <NationalGamesShelf
+                      onSelect={setNational}
+                      completed={player.nationalCompleted ?? []}
+                    />
                   </section>
                 </>
               )}
@@ -861,6 +868,14 @@ export default function Game() {
                       </button>
                     ))}
                   </div>
+                </section>
+              )}
+              {screen === "missions" && (
+                <section className="content-section">
+                  <NationalGamesShelf
+                    onSelect={setNational}
+                    completed={player.nationalCompleted ?? []}
+                  />
                 </section>
               )}
               {screen === "profile" && (
@@ -1200,6 +1215,48 @@ export default function Game() {
                   </button>
                 </div>
               </div>
+            </Overlay>
+          )}
+          {national && (
+            <Overlay close={() => setNational(null)}>
+              <NationalGame
+                kind={national}
+                onComplete={() => {
+                  const g = nationalGames.find((g) => g.id === national)!;
+                  if (!started) {
+                    setToast(
+                      "Ойын аяқталды! Өз қаһарманыңды жасап, келесі ойында сыйлық ал.",
+                    );
+                  } else if (
+                    (player.nationalCompleted ?? []).includes(national)
+                  ) {
+                    setToast(
+                      "Жарайсың! Бұл ойынның алғашқы сыйлығы бұрын алынған.",
+                    );
+                  } else {
+                    update((p) => ({
+                      ...p,
+                      xp: p.xp + g.xp,
+                      coins: p.coins + g.coins,
+                      nationalCompleted: [
+                        ...(p.nationalCompleted ?? []),
+                        national,
+                      ],
+                      stats: {
+                        ...p.stats,
+                        [national === "togyz" ? "wisdom" : "agility"]: Math.min(
+                          100,
+                          p.stats[national === "togyz" ? "wisdom" : "agility"] +
+                            2,
+                        ),
+                      },
+                    }));
+                    playEffect(sound);
+                    setToast(`${g.name}: +${g.xp} XP · +${g.coins} тиын`);
+                  }
+                  setNational(null);
+                }}
+              />
             </Overlay>
           )}
           {practice && (

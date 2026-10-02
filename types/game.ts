@@ -41,6 +41,7 @@ export type Player = {
   coins: number;
   stats: Stats;
   completed: string[];
+  nationalCompleted: string[];
   missionProgress: Record<string, number>;
   unlocked: string[];
   achievements: string[];
