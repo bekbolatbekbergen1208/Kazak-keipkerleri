@@ -1,14 +1,14 @@
 import { test, expect } from "@playwright/test";
-test("six cinematic portraits render in the gallery, detail and mobile views", async ({
+test("six presentation portraits render in the gallery, detail and mobile views", async ({
   page,
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
   await page.waitForTimeout(450);
-  await expect(page.locator(".featured-warrior img")).toHaveAttribute(
+  await expect(page.locator(".team-person-0 img")).toHaveAttribute(
     "src",
-    /hero-0.webp/,
+    /image7.png/,
   );
   await page.screenshot({ path: "tests/artifacts/new-landing.png" });
   await page
@@ -36,9 +36,7 @@ test("six cinematic portraits render in the gallery, detail and mobile views", a
   });
   await page.locator(".hero-card").nth(3).click();
   await expect(
-    page
-      .getByRole("dialog")
-      .getByRole("img", { name: "Керқұла атты Кендебай" }),
+    page.getByRole("dialog").getByRole("img", { name: "Сұңқаркөз" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Жабу", exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });

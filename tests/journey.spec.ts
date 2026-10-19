@@ -42,7 +42,8 @@ test("first journey, real rewards, daily claim and reload persistence", async ({
   await page.goto("/");
   await expect(
     page.getByRole("heading", {
-      name: "Ұлы Дала. Ұлы қаһармандар. Сенің тарихың.",
+      name: "Қазақ қаһармандары",
+      exact: true,
     }),
   ).toBeVisible();
   await page.screenshot({
@@ -52,6 +53,7 @@ test("first journey, real rewards, daily claim and reload persistence", async ({
   await page
     .getByRole("button", { name: "ОЙЫНДЫ БАСТАУ", exact: true })
     .click();
+  await page.getByRole("button", { name: "ӨЗ ҚАҺАРМАНЫҢДЫ ЖАСАУ" }).click();
   await page.getByRole("button", { name: "Өткізіп жіберу" }).click();
   await page.getByRole("textbox").fill("Дала Батыры");
   await page.getByRole("button", { name: "САЯХАТТЫ БАСТАУ" }).click();
@@ -123,6 +125,10 @@ test("choice and horse mini-games complete with keyboard and touch controls", as
   page,
 }) => {
   await page.goto("/");
+  await page
+    .locator("header nav")
+    .getByRole("button", { name: "ОЙЫНДАР", exact: true })
+    .click();
   await page.locator(".practice-card").nth(3).click();
   await page.locator(".answers button").first().click();
   await expect(

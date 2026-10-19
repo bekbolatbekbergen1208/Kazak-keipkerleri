@@ -7,6 +7,7 @@ export const today = () =>
 export const freshPlayer = (): Player => ({
   name: "Жас қаһарман",
   avatar: 0,
+  characterId: null,
   hair: "Қысқа",
   outfit: "Көк шапан",
   armor: "Жеңіл",
@@ -18,6 +19,7 @@ export const freshPlayer = (): Player => ({
   stats: { strength: 20, wisdom: 20, courage: 20, agility: 20, eloquence: 20 },
   completed: [],
   nationalCompleted: [],
+  learning: { completed: [], dailyDates: [] },
   missionProgress: {},
   unlocked: ["tostik"],
   achievements: [],
@@ -44,6 +46,10 @@ export function reconcile(p: Player): Player {
   return {
     ...p,
     nationalCompleted: p.nationalCompleted ?? [],
+    characterId: heroes.some((h) => h.id === p.characterId)
+      ? p.characterId
+      : null,
+    learning: p.learning ?? { completed: [], dailyDates: [] },
     unlocked,
     achievements: [...a],
     daily:

@@ -1,15 +1,19 @@
 "use client";
 import { nationalGames, type NationalKind } from "@/data/national-games";
 import { ArrowUpRight, Check, Coins, Zap } from "lucide-react";
+import { GameCover } from "../GameArt";
 import Togyzqumalaq from "./Togyzqumalaq";
 import AsykAtu from "./AsykAtu";
+import ArqanTartys from "./ArqanTartys";
 import TengeIlu from "./TengeIlu";
 export function NationalGamesShelf({
   onSelect,
   completed,
+  ready = true,
 }: {
   onSelect: (kind: NationalKind) => void;
   completed: string[];
+  ready?: boolean;
 }) {
   return (
     <section className="national-section">
@@ -19,16 +23,20 @@ export function NationalGamesShelf({
           <h2>Ұлттық ойындар</h2>
           <p>Ақылыңды, мергендігіңді және ептілігіңді сына.</p>
         </div>
-        <span className="pill">3 ОЙЫН</span>
+        <span className="pill">{nationalGames.length} ОЙЫН</span>
       </div>
       <div className="national-grid">
         {nationalGames.map((g) => (
           <button
             key={g.id}
+            disabled={!ready}
             className={`national-card national-${g.id}`}
             onClick={() => onSelect(g.id)}
           >
-            <span className="national-symbol">{g.symbol}</span>
+            <GameCover kind={g.id} />
+            <span className="national-play-label">
+              ОЙНАУ <ArrowUpRight size={16} />
+            </span>
             <small>{g.subtitle}</small>
             <h3>{g.name}</h3>
             <p>{g.description}</p>
@@ -67,6 +75,8 @@ export default function NationalGame({
     <Togyzqumalaq onComplete={onComplete} />
   ) : kind === "asyk" ? (
     <AsykAtu onComplete={onComplete} />
+  ) : kind === "arqan" ? (
+    <ArqanTartys onComplete={onComplete} />
   ) : (
     <TengeIlu onComplete={onComplete} />
   );

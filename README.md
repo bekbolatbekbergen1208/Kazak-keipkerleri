@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000. Guest progress saves in this browser. Start → intro → creator → map → Ер Төстік mission → riddle → route → memory → rewards → profile. All games support pointer/touch; horse run also supports Space/Arrow Up.
+Open http://localhost:3000. Guest progress saves in this browser. Start opens the national games hub. Choose a game to play immediately as a guest and save rewards locally. Optional character creation opens the story journey: intro → creator → map → Ер Төстік mission → rewards → profile. All games support pointer/touch; horse run also supports Space/Arrow Up.
 
 ## Supabase
 
@@ -34,6 +34,12 @@ This is an early playable release, not a fully audited public service. Supabase 
 
 ## National games
 
-The «Ұлттық ойындар» shelves on Home and Missions include Togyzqumalaq (18 pits, 162 stones, tuzdyk, computer or two local players), simplified digital Asyk Atu (aim and power), and Tenge Ilu (keyboard/touch timing). Togyzqumalaq grants a learning reward after six total moves, while its full match can continue. Each game grants XP and coins once per saved player; guest practice without a created player grants no currency. Reward flags use the existing saved `game_state`, including compatibility with older saves.
+The «Ұлттық ойындар» shelves on Home, the dedicated Games screen, and Missions include Togyzqumalaq (18 pits, 162 stones, tuzdyk, computer or two local players), simplified digital Asyk Atu (aim and power), Tenge Ilu (keyboard/touch timing), and Arqan Tartys (alternating left/right pulls against the computer). Asyk targets support tap-to-aim as well as direction/power sliders. Togyzqumalaq grants a learning reward after six total moves, while its full match can continue. Each game grants XP and coins once per saved player; starting a national game initializes browser-local guest progress without registration. Reward flags use the existing saved `game_state`, including compatibility with older saves.
 
 Rules reference: [Kazakh Togyzqumalaq Federation](https://9kumalak.com/index.php/zhyldy-zhospar/509-to-yz-mala-a-idasy-men-erezhesi). Cultural reference: [UNESCO Assyk games](https://ich.unesco.org/en/RL/kazakh-traditional-assyk-games-01086).
+
+## Grade 3 learning club
+
+The Kazakh «Білім» screen adds a short original story with comprehension questions, a six-hero ability quiz, and four proverb questions. Children can retry answers and reread the story without a timer. Completing each activity awards a collectible hero badge, 40 XP and 10 coins once; a rotating daily activity grants 20 XP once per local calendar day. Progress is stored in the existing player state and old saves receive empty learning progress. The homepage links directly to the club. Shared styling includes larger question text, touch controls and tablet navigation.
+
+Players can select any of the six presentation heroes from the homepage, Games or Profile. The selection is independent of mission unlocks and persists in `game_state.characterId`; the header and profile display the selected artwork. Guest choices stay in that browser, while configured signed-in profiles use the existing cloud synchronization.

@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AsykShape, GameProgress } from "../GameArt";
 import { RotateCcw, Trophy } from "lucide-react";
 const targets = [
   { x: 29, y: 37 },
@@ -16,13 +17,20 @@ export default function AsykAtu({ onComplete }: { onComplete: () => void }) {
   const [message, setMessage] = useState("Сақаңды асыққа бағытта.");
   const [shot, setShot] = useState<{ x: number; y: number } | null>(null);
   const [flying, setFlying] = useState(false);
+  const shotTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (shotTimer.current) clearTimeout(shotTimer.current);
+    },
+    [],
+  );
   function shoot() {
     if (flying) return;
     const y = 85 - force * 0.65;
     setShot({ x: aim, y });
     setFlying(true);
     setThrows((n) => n + 1);
-    setTimeout(() => {
+    shotTimer.current = setTimeout(() => {
       const hit = targets.findIndex(
         (t, i) => !hits.includes(i) && Math.hypot(t.x - aim, t.y - y) < 9,
       );
@@ -34,23 +42,38 @@ export default function AsykAtu({ onComplete }: { onComplete: () => void }) {
     }, 450);
   }
   return (
-    <div className="national-game">
+    <div
+      className={`national-game play-asyk ${hits.length === 5 ? "game-won" : ""}`}
+    >
       <div className="game-type">✧ МЕРГЕНДІК СЫНАҚ</div>
       <h2>Асық ату</h2>
       <p>
-        Бес асықты шеңберден шығар. Бағыт пен лақтыру күшін таңда, содан кейін
-        сақаны ат. Бұл — асық атудың жеңілдетілген цифрлық нұсқасы.
+        Бес асықты шеңберден шығар. Асықты басып көзде немесе бағыт пен күшті
+        таңда, содан кейін сақаны ат. Бұл — асық атудың жеңілдетілген цифрлық
+        нұсқасы.
       </p>
+      <GameProgress value={hits.length} total={5} label="Жиналған асық" />
       <div className="asyk-field">
+        <span className="arena-caption" aria-hidden="true">
+          АСЫҚ АЛАҢЫ
+        </span>
         <div className="asyk-ring" />
         {targets.map((t, i) => (
-          <span
+          <button
+            type="button"
+            aria-label={`${i + 1}-асықты көздеу`}
+            disabled={flying || hits.includes(i)}
+            onClick={() => {
+              setAim(t.x);
+              setForce(Math.round((85 - t.y) / 0.65));
+              setMessage(`${i + 1}-асық көзделді. Енді сақаны ат!`);
+            }}
             key={i}
             className={`asyk-bone ${hits.includes(i) ? "hit" : ""}`}
             style={{ left: `${t.x}%`, top: `${t.y}%` }}
           >
-            ◈
-          </span>
+            <AsykShape />
+          </button>
         ))}
         <span
           className="asyk-aim"
@@ -63,7 +86,7 @@ export default function AsykAtu({ onComplete }: { onComplete: () => void }) {
           className={`saka ${flying ? "flying" : ""}`}
           style={{ left: `${shot?.x ?? 50}%`, top: `${shot?.y ?? 85}%` }}
         >
-          ◈
+          <AsykShape />
         </span>
         <span className="field-score">
           {hits.length} / 5 асық · {throws} лақтыру

@@ -1,3 +1,5 @@
+import { heroes } from "@/data/content";
+import HeroArtwork from "./HeroArtwork";
 import type { Player } from "@/types/game";
 const equipmentSymbols: Record<string, string> = {
   Садақ: "⌒",
@@ -8,6 +10,17 @@ const equipmentSymbols: Record<string, string> = {
   Қамшы: "〰",
 };
 export default function PlayerPortrait({ player }: { player: Player }) {
+  const character = heroes.find((h) => h.id === player.characterId);
+  if (character)
+    return (
+      <div
+        className="player-portrait selected-player-portrait"
+        role="img"
+        aria-label={`${player.name}: ${character.name}`}
+      >
+        <HeroArtwork src={character.portrait} alt={character.name} />
+      </div>
+    );
   const coat =
     player.outfit === "Жасыл шапан"
       ? "#39836b"

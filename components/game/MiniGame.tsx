@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { HorseRider, GameProgress } from "./GameArt";
 import { Brain, Check, Compass, RotateCcw } from "lucide-react";
 import { riddles } from "@/data/content";
 import type { GameKind } from "@/types/game";
@@ -142,7 +143,7 @@ export default function MiniGame({
           )}
           {kind === "battle" && (
             <p>
-              Алпамыс × Ер Төстік · Шешім қабылдау
+              Ер Төстіктің достары · Шешім қабылдау
               <br />
               Жеңіске күшпен емес, ақылмен жет!
             </p>
@@ -252,8 +253,13 @@ function HorseRun({ onComplete }: { onComplete: () => void }) {
       <div className="game-type">♞ КЕРҚҰЛА ЖАРЫСЫ</div>
       <h2>Дала желімен жарыс!</h2>
       <p>5 кедергіден секір. Бос орын, ↑ немесе «СЕКІРУ» батырмасын бас.</p>
+      <GameProgress value={score} total={5} label="Өткен кедергі" />
       <div className="horse-scene">
-        <div className={`rider ${jump ? "jump" : ""}`}>♞</div>
+        <span className="arena-sun" aria-hidden="true" />
+        <span className="arena-mountains" aria-hidden="true" />
+        <div className={`rider ${jump ? "jump" : ""}`}>
+          <HorseRider />
+        </div>
         <div className="obstacle" style={{ left: `${100 - (tick % 50) * 2}%` }}>
           ▰
         </div>

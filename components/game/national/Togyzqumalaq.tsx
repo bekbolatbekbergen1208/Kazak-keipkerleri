@@ -21,7 +21,7 @@ export default function Togyzqumalaq({
   const disabled = (i: number) =>
     !legalMoves(board).includes(i) || (mode === "computer" && board.turn === 1);
   return (
-    <div className="national-game">
+    <div className="national-game play-togyz">
       <div className="game-type">◉ ҰЛТТЫҚ ЗИЯТКЕРЛІК ОЙЫН</div>
       <h2>Тоғызқұмалақ</h2>
       <p>Өз отауыңды таңдап жүріс жаса. 82 құмалақ жинаған ойыншы жеңеді.</p>

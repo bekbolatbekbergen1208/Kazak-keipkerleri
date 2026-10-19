@@ -11,6 +11,7 @@ async function createPlayer(page: Page) {
   await page
     .getByRole("button", { name: "ОЙЫНДЫ БАСТАУ", exact: true })
     .click();
+  await page.getByRole("button", { name: "ӨЗ ҚАҺАРМАНЫҢДЫ ЖАСАУ" }).click();
   await page.getByRole("button", { name: "Өткізіп жіберу" }).click();
   await page.getByRole("textbox").fill("Ұлттық ойыншы");
   await page.getByRole("button", { name: "САЯХАТТЫ БАСТАУ" }).click();
@@ -126,4 +127,69 @@ test("national games and board fit mobile viewport", async ({ page }) => {
       .evaluate((el) => el.scrollWidth <= el.clientWidth),
   ).toBe(true);
   await page.screenshot({ path: "tests/artifacts/national-mobile.png" });
+});
+
+test("home games start immediately and rope win is saved only once", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(page.locator(".home-national-games .national-card")).toHaveCount(
+    4,
+  );
+  await page
+    .getByRole("button", { name: "ОЙЫНДЫ БАСТАУ", exact: true })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Қазақтың дәстүрлі ойындары" }),
+  ).toBeVisible();
+  await page
+    .locator(".national-card")
+    .filter({ hasText: "Арқан тартыс" })
+    .click();
+  async function win() {
+    await page
+      .getByRole("button", { name: "ТАРТЫСТЫ БАСТАУ", exact: true })
+      .click();
+    for (let i = 0; i < 24; i++) {
+      if (await page.getByRole("button", { name: "СЫЙЛЫҚТЫ АЛУ" }).isVisible())
+        break;
+      if (i % 2 === 0) await page.keyboard.press("ArrowLeft");
+      else
+        await page
+          .getByRole("button", { name: "ОҢ ҚОЛ →", exact: true })
+          .click();
+      await page.waitForTimeout(130);
+    }
+    await expect(
+      page.getByRole("status").filter({ hasText: "ЖЕҢІС!" }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "СЫЙЛЫҚТЫ АЛУ" }).click();
+  }
+  await win();
+  await expect(page.locator(".xp-pill")).toContainText("40");
+  await page.reload();
+  await page
+    .locator(".home-national-games .national-card")
+    .filter({ hasText: "Арқан тартыс" })
+    .click();
+  await win();
+  await expect(page.locator(".xp-pill")).toContainText("40");
+});
+
+test("asyk can be aimed by tapping the target on a phone", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "ОЙЫНДЫ БАСТАУ", exact: true })
+    .click();
+  await page.locator(".national-card").filter({ hasText: "Асық ату" }).click();
+  for (let i = 1; i <= 5; i++) {
+    await page
+      .getByRole("button", { name: `${i}-асықты көздеу`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "САҚАНЫ АТУ", exact: true }).click();
+    await expect(page.locator(".field-score")).toContainText(`${i} / 5`);
+  }
+  await page.getByRole("button", { name: "СЫЙЛЫҚТЫ АЛУ" }).click();
+  await expect(page.locator(".xp-pill")).toContainText("40");
 });

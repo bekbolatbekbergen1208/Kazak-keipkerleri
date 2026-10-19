@@ -1,4 +1,4 @@
-export type NationalKind = "togyz" | "asyk" | "tenge";
+export type NationalKind = "togyz" | "asyk" | "tenge" | "arqan";
 export const nationalGames = [
   {
     id: "togyz" as const,
@@ -24,6 +24,15 @@ export const nationalGames = [
     subtitle: "Ептілік пен жылдамдық",
     description: "Ат үстінен еңкейіп, жолдағы бес теңгені іліп ал.",
     symbol: "♞",
+    xp: 40,
+    coins: 15,
+  },
+  {
+    id: "arqan" as const,
+    name: "Арқан тартыс",
+    subtitle: "Күш пен үйлесім",
+    description: "Екі қолды кезектестіріп, арқанды өз мәре сызығыңа тарт.",
+    symbol: "↔",
     xp: 40,
     coins: 15,
   },

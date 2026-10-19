@@ -1,3 +1,4 @@
+import type { LearningProgress } from "@/data/learning";
 export type Stats = {
   strength: number;
   wisdom: number;
@@ -31,6 +32,7 @@ export type Mission = {
 export type Player = {
   name: string;
   avatar: number;
+  characterId: string | null;
   hair: string;
   outfit: string;
   armor: string;
@@ -42,6 +44,7 @@ export type Player = {
   stats: Stats;
   completed: string[];
   nationalCompleted: string[];
+  learning: LearningProgress;
   missionProgress: Record<string, number>;
   unlocked: string[];
   achievements: string[];

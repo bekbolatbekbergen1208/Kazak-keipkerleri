@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { HorseRider, GameProgress } from "../GameArt";
 import { RotateCcw, Trophy } from "lucide-react";
 export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
   const [running, setRunning] = useState(false);
@@ -10,12 +11,15 @@ export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
   const action = useRef(false);
   const leanTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clock = useRef(0);
+  const collectedPass = useRef(-1);
   function collect() {
-    if (!running || action.current) return;
+    if (!running || score >= 5 || action.current) return;
     action.current = true;
     setLean(true);
     const phase = clock.current % 60;
-    if (phase >= 38 && phase <= 48) {
+    const pass = Math.floor(clock.current / 60);
+    if (phase >= 38 && phase <= 48 && collectedPass.current !== pass) {
+      collectedPass.current = pass;
       setScore((s) => s + 1);
       setMessage("ІЛІП АЛДЫҢ! Керемет ептілік.");
     } else setMessage("Ертерек не кешірек еңкейдің. Келесі теңгені күт.");
@@ -31,7 +35,7 @@ export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
     [],
   );
   useEffect(() => {
-    if (!running) return;
+    if (!running || score >= 5) return;
     const id = setInterval(() => {
       clock.current++;
       setTick(clock.current);
@@ -41,10 +45,14 @@ export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
       }
     }, 50);
     return () => clearInterval(id);
-  }, [running]);
+  }, [running, score]);
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.code === "Space" || e.code === "ArrowDown") {
+      if (
+        running &&
+        score < 5 &&
+        (e.code === "Space" || e.code === "ArrowDown")
+      ) {
         e.preventDefault();
         collect();
       }
@@ -55,6 +63,7 @@ export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
   function restart() {
     if (leanTimer.current) clearTimeout(leanTimer.current);
     clock.current = 0;
+    collectedPass.current = -1;
     action.current = false;
     setLean(false);
     setTick(0);
@@ -64,7 +73,7 @@ export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
   }
   const phase = tick % 60;
   return (
-    <div className="national-game">
+    <div className={`national-game play-tenge ${score >= 5 ? "game-won" : ""}`}>
       <div className="game-type">♞ ҰЛТТЫҚ АТ СПОРТЫ</div>
       <h2>Теңге ілу</h2>
       <p>
@@ -72,17 +81,22 @@ export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
         батырмасын бас. Мақсат: 6 мүмкіндіктен 5 теңге. Бұл — спорттың
         жеңілдетілген цифрлық нұсқасы.
       </p>
+      <GameProgress value={score} total={5} label="Жиналған теңге" />
       <div className="tenge-field">
-        <span className={`tenge-rider ${lean ? "lean" : ""}`}>♞</span>
+        <span className="arena-sun" aria-hidden="true" />
+        <span className="arena-mountains" aria-hidden="true" />
+        <span className={`tenge-rider ${lean ? "lean" : ""}`}>
+          <HorseRider />
+        </span>
         <span className="pickup-zone" />
         <span
           className="tenge-token"
           style={{
             left: `${100 - phase * 1.8}%`,
-            opacity: lean && phase >= 38 && phase <= 48 ? 0 : 1,
+            opacity: collectedPass.current === Math.floor(tick / 60) ? 0 : 1,
           }}
         >
-          ◉
+          ₸
         </span>
         <span className="field-score">
           {score} / 5 теңге · {Math.min(6, Math.floor(tick / 60) + 1)} / 6
