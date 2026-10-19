@@ -57,26 +57,6 @@ test("asyk aiming, saved rewards and repeat reward protection", async ({
   await asyk(page);
   await expect(page.locator(".xp-pill")).toContainText("40");
 });
-test("togyz two-player board and six-move learning reward", async ({
-  page,
-}) => {
-  await createPlayer(page);
-  await page
-    .locator(".national-card")
-    .filter({ hasText: "Тоғызқұмалақ" })
-    .click();
-  await page
-    .getByRole("combobox", { name: "Ойын режимі" })
-    .selectOption("friends");
-  await expect(page.locator(".togyz-pit")).toHaveCount(18);
-  for (let i = 0; i < 6; i++)
-    await page.locator(".togyz-pit:not(:disabled)").first().click();
-  await page
-    .getByRole("button", { name: "ТАНЫСУ СЫНАҚТАРЫ ОРЫНДАЛДЫ" })
-    .click();
-  await page.getByRole("button", { name: "СЫЙЛЫҚТЫ АЛУ" }).click();
-  await expect(page.locator(".xp-pill")).toContainText("60");
-});
 test("tenge timing supports keyboard and touch button", async ({ page }) => {
   await createPlayer(page);
   await page.locator(".national-card").filter({ hasText: "Теңге ілу" }).click();
@@ -104,7 +84,7 @@ test("tenge timing supports keyboard and touch button", async ({ page }) => {
   await page.getByRole("button", { name: "СЫЙЛЫҚТЫ АЛУ" }).click();
   await expect(page.locator(".xp-pill")).toContainText("40");
 });
-test("national games and board fit mobile viewport", async ({ page }) => {
+test("national games fit mobile viewport", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page
@@ -113,7 +93,7 @@ test("national games and board fit mobile viewport", async ({ page }) => {
     .click();
   await page
     .locator(".national-card")
-    .filter({ hasText: "Тоғызқұмалақ" })
+    .filter({ hasText: "Арқан тартыс" })
     .click();
   expect(
     await page.evaluate(
@@ -123,7 +103,7 @@ test("national games and board fit mobile viewport", async ({ page }) => {
   await page.waitForTimeout(450);
   expect(
     await page
-      .locator(".togyz-board")
+      .locator(".arqan-field")
       .evaluate((el) => el.scrollWidth <= el.clientWidth),
   ).toBe(true);
   await page.screenshot({ path: "tests/artifacts/national-mobile.png" });
@@ -134,7 +114,7 @@ test("home games start immediately and rope win is saved only once", async ({
 }) => {
   await page.goto("/");
   await expect(page.locator(".home-national-games .national-card")).toHaveCount(
-    4,
+    3,
   );
   await page
     .getByRole("button", { name: "ОЙЫНДЫ БАСТАУ", exact: true })

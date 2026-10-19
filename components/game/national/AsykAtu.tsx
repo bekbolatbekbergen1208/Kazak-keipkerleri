@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { AsykShape, GameProgress } from "../GameArt";
+import { AsykShape, GameProgress, GameCharacter } from "../GameArt";
 import { RotateCcw, Trophy } from "lucide-react";
 const targets = [
   { x: 29, y: 37 },
@@ -58,6 +58,9 @@ export default function AsykAtu({ onComplete }: { onComplete: () => void }) {
           АСЫҚ АЛАҢЫ
         </span>
         <div className="asyk-ring" />
+        <span className="asyk-player">
+          <GameCharacter />
+        </span>
         {targets.map((t, i) => (
           <button
             type="button"

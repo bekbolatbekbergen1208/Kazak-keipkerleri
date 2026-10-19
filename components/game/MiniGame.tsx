@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { HorseRider, GameProgress } from "./GameArt";
+import { HorseRider, GameProgress, GameCharacter } from "./GameArt";
 import { Brain, Check, Compass, RotateCcw } from "lucide-react";
 import { riddles } from "@/data/content";
 import type { GameKind } from "@/types/game";
@@ -53,6 +53,9 @@ export default function MiniGame({
         : answer !== null && !wrong;
   return (
     <div className="mini-game">
+      <span className="mini-companion">
+        <GameCharacter />
+      </span>
       <div className="game-type">
         <Brain size={18} />
         {

@@ -1,14 +1,5 @@
-export type NationalKind = "togyz" | "asyk" | "tenge" | "arqan";
+export type NationalKind = "asyk" | "tenge" | "arqan";
 export const nationalGames = [
-  {
-    id: "togyz" as const,
-    name: "Тоғызқұмалақ",
-    subtitle: "Ақыл мен стратегия",
-    description: "18 отау, 162 құмалақ. Қазаныңа көбірек құмалақ жина.",
-    symbol: "◉",
-    xp: 60,
-    coins: 20,
-  },
   {
     id: "asyk" as const,
     name: "Асық ату",

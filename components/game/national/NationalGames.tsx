@@ -2,7 +2,6 @@
 import { nationalGames, type NationalKind } from "@/data/national-games";
 import { ArrowUpRight, Check, Coins, Zap } from "lucide-react";
 import { GameCover } from "../GameArt";
-import Togyzqumalaq from "./Togyzqumalaq";
 import AsykAtu from "./AsykAtu";
 import ArqanTartys from "./ArqanTartys";
 import TengeIlu from "./TengeIlu";
@@ -71,9 +70,7 @@ export default function NationalGame({
   kind: NationalKind;
   onComplete: () => void;
 }) {
-  return kind === "togyz" ? (
-    <Togyzqumalaq onComplete={onComplete} />
-  ) : kind === "asyk" ? (
+  return kind === "asyk" ? (
     <AsykAtu onComplete={onComplete} />
   ) : kind === "arqan" ? (
     <ArqanTartys onComplete={onComplete} />

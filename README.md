@@ -34,9 +34,9 @@ This is an early playable release, not a fully audited public service. Supabase 
 
 ## National games
 
-The «Ұлттық ойындар» shelves on Home, the dedicated Games screen, and Missions include Togyzqumalaq (18 pits, 162 stones, tuzdyk, computer or two local players), simplified digital Asyk Atu (aim and power), Tenge Ilu (keyboard/touch timing), and Arqan Tartys (alternating left/right pulls against the computer). Asyk targets support tap-to-aim as well as direction/power sliders. Togyzqumalaq grants a learning reward after six total moves, while its full match can continue. Each game grants XP and coins once per saved player; starting a national game initializes browser-local guest progress without registration. Reward flags use the existing saved `game_state`, including compatibility with older saves.
+The «Ұлттық ойындар» shelves on Home, the dedicated Games screen, and Missions include simplified digital Asyk Atu (aim and power), Tenge Ilu (keyboard/touch timing), and Arqan Tartys (alternating left/right pulls against the computer). Asyk targets support tap-to-aim as well as direction/power sliders. Each game grants XP and coins once per saved player; starting a national game initializes browser-local guest progress without registration. Reward flags use the existing saved `game_state`, including compatibility with older saves.
 
-Rules reference: [Kazakh Togyzqumalaq Federation](https://9kumalak.com/index.php/zhyldy-zhospar/509-to-yz-mala-a-idasy-men-erezhesi). Cultural reference: [UNESCO Assyk games](https://ich.unesco.org/en/RL/kazakh-traditional-assyk-games-01086).
+Cultural reference: [UNESCO Assyk games](https://ich.unesco.org/en/RL/kazakh-traditional-assyk-games-01086).
 
 ## Grade 3 learning club
 

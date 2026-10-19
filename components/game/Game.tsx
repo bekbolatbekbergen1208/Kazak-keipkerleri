@@ -25,6 +25,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import { GameCharacterContext } from "./GameArt";
 import CharacterPicker from "@/components/heroes/CharacterPicker";
 import LearningClub from "./LearningClub";
 import { completeLearning } from "@/lib/learning";
@@ -295,1119 +296,1150 @@ export default function Game() {
     if (!error && authMode === "login") setModal(null);
   }
   return (
-    <MotionConfig reducedMotion="user">
-      <div className="app-shell">
-        <header className="header">
-          <button
-            className="brand"
-            onClick={() => navigate("home")}
-            aria-label="Басты бет"
-          >
-            <span className="emblem">
-              <Emblem />
-            </span>
-            <span>
-              ҚАЗАҚ<span className="brand-bottom">ҚАҺАРМАНДАРЫ</span>
-            </span>
-          </button>
-          <nav>
-            {navigation.map((n) => (
-              <button
-                className={screen === n.id ? "active" : ""}
-                key={n.id}
-                disabled={!loaded}
-                onClick={() => navigate(n.id)}
-              >
-                {n.label}
-              </button>
-            ))}
-          </nav>
-          <div className="header-right">
-            <span className="xp-pill">
-              <Zap size={14} />
-              {player.xp} <small>XP</small>
-            </span>
-            <span className="coin-pill">
-              <Coins size={16} />
-              {player.coins}
-            </span>
+    <GameCharacterContext.Provider
+      value={player.characterId ?? heroes[player.avatar % heroes.length].id}
+    >
+      <MotionConfig reducedMotion="user">
+        <div className="app-shell">
+          <header className="header">
             <button
-              className="avatar-button"
-              onClick={() => navigate("profile")}
-              aria-label="Ойыншы профилі"
+              className="brand"
+              onClick={() => navigate("home")}
+              aria-label="Басты бет"
             >
-              {player.characterId ? (
-                <HeroArtwork
-                  src={
-                    heroes.find((h) => h.id === player.characterId)?.portrait ??
-                    heroes[0].portrait
-                  }
-                  alt="Таңдалған кейіпкер"
-                />
-              ) : (
-                <Image
-                  src={`/art/hero-${player.avatar}.svg`}
-                  alt=""
-                  width={36}
-                  height={36}
+              <span className="emblem">
+                <Emblem />
+              </span>
+              <span>
+                ҚАЗАҚ<span className="brand-bottom">ҚАҺАРМАНДАРЫ</span>
+              </span>
+            </button>
+            <nav>
+              {navigation.map((n) => (
+                <button
+                  className={screen === n.id ? "active" : ""}
+                  key={n.id}
+                  disabled={!loaded}
+                  onClick={() => navigate(n.id)}
+                >
+                  {n.label}
+                </button>
+              ))}
+            </nav>
+            <div className="header-right">
+              <span className="xp-pill">
+                <Zap size={14} />
+                {player.xp} <small>XP</small>
+              </span>
+              <span className="coin-pill">
+                <Coins size={16} />
+                {player.coins}
+              </span>
+              <button
+                className="avatar-button"
+                onClick={() => navigate("profile")}
+                aria-label="Ойыншы профилі"
+              >
+                {player.characterId ? (
+                  <HeroArtwork
+                    src={
+                      heroes.find((h) => h.id === player.characterId)
+                        ?.portrait ?? heroes[0].portrait
+                    }
+                    alt="Таңдалған кейіпкер"
+                  />
+                ) : (
+                  <Image
+                    src={`/art/hero-${player.avatar}.svg`}
+                    alt=""
+                    width={36}
+                    height={36}
+                  />
+                )}
+              </button>
+              <button
+                className="settings-button"
+                aria-label="Баптаулар"
+                onClick={() => setModal("settings")}
+              >
+                <Settings size={19} />
+              </button>
+            </div>
+          </header>
+          <main>
+            <motion.div
+              key={screen}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              {screen === "home" && (
+                <PresentationHome
+                  started={started}
+                  ready={loaded}
+                  onStart={() => navigate("games")}
+                  onHeroes={() => navigate("heroes")}
+                  onLearn={learn}
+                  onNational={openNational}
+                  completed={player.nationalCompleted ?? []}
+                  onAcademy={() => navigate("learning")}
+                  badgeCount={player.learning?.completed.length ?? 0}
+                  onPickCharacter={() => setPickingCharacter(true)}
                 />
               )}
-            </button>
-            <button
-              className="settings-button"
-              aria-label="Баптаулар"
-              onClick={() => setModal("settings")}
-            >
-              <Settings size={19} />
-            </button>
-          </div>
-        </header>
-        <main>
-          <motion.div
-            key={screen}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-          >
-            {screen === "home" && (
-              <PresentationHome
-                started={started}
-                ready={loaded}
-                onStart={() => navigate("games")}
-                onHeroes={() => navigate("heroes")}
-                onLearn={learn}
-                onNational={openNational}
-                completed={player.nationalCompleted ?? []}
-                onAcademy={() => navigate("learning")}
-                badgeCount={player.learning?.completed.length ?? 0}
-                onPickCharacter={() => setPickingCharacter(true)}
-              />
-            )}
-            {screen === "learning" && (
-              <LearningClub
-                date={today()}
-                progress={player.learning ?? { completed: [], dailyDates: [] }}
-                onComplete={(kind: LearningKind) => {
-                  setStarted(true);
-                  update((p) => completeLearning(p, kind, today()));
-                  playEffect(sound);
-                }}
-              />
-            )}
-            {screen === "games" && (
-              <section className="content-section games-hub">
-                <div className="eyebrow">ОЙНАП ҮЙРЕНЕМІЗ</div>
-                <h1 className="page-title">Қазақтың дәстүрлі ойындары</h1>
-                <p>
-                  Ойынды таңдап, бірден баста. Тіркелу қажет емес. Жинаған
-                  ұпайың осы браузерде сақталады.
-                </p>
-                <button
-                  className="outline-button learning-hub-link"
-                  onClick={() => navigate("learning")}
-                >
-                  <Star size={18} /> БІЛІМ САЯХАТЫНА ӨТУ{" "}
-                  <ArrowRight size={18} />
-                </button>
-                <div className="chosen-character-banner">
-                  <div>
-                    <strong>
-                      {player.characterId
-                        ? `Менің кейіпкерім: ${heroes.find((h) => h.id === player.characterId)?.name}`
-                        : "Өзіңе ұнаған қаһарманды таңда!"}
-                    </strong>
-                    <p>
-                      Сүйікті кейіпкерің ойын мен профильде сенімен бірге
-                      болады.
-                    </p>
-                  </div>
-                  <button
-                    className="outline-button"
-                    onClick={() => setPickingCharacter(true)}
-                  >
-                    {player.characterId
-                      ? "КЕЙІПКЕРДІ АУЫСТЫРУ"
-                      : "КЕЙІПКЕР ТАҢДАУ"}
-                    <User size={18} />
-                  </button>
-                </div>
-                <NationalGamesShelf
-                  completed={player.nationalCompleted ?? []}
-                  onSelect={openNational}
-                />
-                <div className="game-help">
-                  <h3>Қалай ойнаймыз?</h3>
-                  <p>
-                    Карточканы бас. Ойын ішіндегі нұсқаулықты орында. Жеңгеннен
-                    кейін «Сыйлықты алу» батырмасын басып, ұпайыңды жина.
-                  </p>
-                  <button
-                    className="outline-button"
-                    onClick={() => {
-                      setIntroStep(0);
-                      navigate("intro");
-                    }}
-                  >
-                    ӨЗ ҚАҺАРМАНЫҢДЫ ЖАСАУ <User size={16} />
-                  </button>
-                </div>
-                <div className="section-heading">
-                  <div>
-                    <div className="eyebrow">ҚОСЫМША ЖАТТЫҒУЛАР</div>
-                    <h2>Ақыл мен ептілік</h2>
-                  </div>
-                </div>
-                <div className="game-grid">
-                  {(
-                    [
-                      "riddle",
-                      "path",
-                      "memory",
-                      "choice",
-                      "horse",
-                    ] as GameKind[]
-                  ).map((kind, i) => (
-                    <button
-                      key={kind}
-                      className="practice-card"
-                      onClick={() => setPractice(kind)}
-                    >
-                      <span>{["◈", "⌁", "✦", "⚑", "♞"][i]}</span>
-                      <h3>
-                        {
-                          [
-                            "Жұмбақ",
-                            "Дала жолы",
-                            "Есте сақтау",
-                            "Батыр таңдауы",
-                            "Ат жарысы",
-                          ][i]
-                        }
-                      </h3>
-                      <small>
-                        ОЙНАУ <ArrowUpRight size={13} />
-                      </small>
-                    </button>
-                  ))}
-                </div>
-              </section>
-            )}
-            {screen === "intro" && (
-              <section className="intro-screen">
-                <span className="intro-emblem">
-                  <Emblem />
-                </span>
-                <AnimatePresence mode="wait">
-                  <motion.h1
-                    key={introStep}
-                    initial={{ opacity: 0, y: 25 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    {intro[introStep]}
-                  </motion.h1>
-                </AnimatePresence>
-                <div className="intro-dots">
-                  {intro.map((_, i) => (
-                    <span key={i} className={i === introStep ? "active" : ""} />
-                  ))}
-                </div>
-                <button
-                  className="text-button"
-                  onClick={() => navigate("creator")}
-                >
-                  Өткізіп жіберу <ArrowRight size={16} />
-                </button>
-              </section>
-            )}
-            {screen === "creator" && (
-              <section className="content-section">
-                <div className="eyebrow">СЕНІҢ АҢЫЗЫҢ ОСЫ ЖЕРДЕН БАСТАЛАДЫ</div>
-                <h1 className="page-title">Өз қаһарманыңды жаса</h1>
-                <div className="creator-layout">
-                  <div className="creator-preview">
-                    <PlayerPortrait player={player} />
-                    <div>
-                      <small>ДЕҢГЕЙ {level}</small>
-                      <h2>{player.name || "Жас қаһарман"}</h2>
-                      <p>
-                        {player.headwear} · {player.equipment} ·{" "}
-                        {player.accessory}
-                      </p>
-                      <p>
-                        {player.hair} · {player.outfit} · {player.armor} сауыт
-                      </p>
-                    </div>
-                  </div>
-                  <div className="panel creator-controls">
-                    <label>
-                      Қаһарманның аты
-                      <input
-                        maxLength={24}
-                        value={player.name}
-                        onChange={(e) =>
-                          setPlayer({ ...player, name: e.target.value })
-                        }
-                      />
-                    </label>
-                    <button
-                      className="outline-button"
-                      onClick={() => setPickingCharacter(true)}
-                    >
-                      ЕРТЕГІ КЕЙІПКЕРІН ТАҢДАУ <User size={16} />
-                    </button>
-                    <label>Бейнеңді таңда</label>
-                    <div className="avatar-choices">
-                      {heroes.map((h, i) => (
-                        <button
-                          className={player.avatar === i ? "selected" : ""}
-                          key={h.id}
-                          onClick={() =>
-                            setPlayer({
-                              ...player,
-                              avatar: i,
-                              characterId: null,
-                            })
-                          }
-                          aria-label={`Бейне ${i + 1}`}
-                        >
-                          <Image
-                            src={`/art/hero-${i}.svg`}
-                            alt=""
-                            width={60}
-                            height={75}
-                          />
-                        </button>
-                      ))}
-                    </div>
-                    <div className="customization-grid">
-                      {(
-                        [
-                          {
-                            key: "hair",
-                            label: "Шаш үлгісі",
-                            values: ["Қысқа", "Ұзын", "Өрілген"],
-                          },
-                          {
-                            key: "outfit",
-                            label: "Киім",
-                            values: ["Көк шапан", "Жасыл шапан", "Алтын шапан"],
-                          },
-                          {
-                            key: "armor",
-                            label: "Сауыт",
-                            values: ["Жеңіл", "Былғары", "Темір"],
-                          },
-                          {
-                            key: "headwear",
-                            label: "Бас киім",
-                            values: ["Дулыға", "Тақия", "Бөрік"],
-                          },
-                          {
-                            key: "accessory",
-                            label: "Аксессуар",
-                            values: ["Тұмар", "Белдік", "Білезік"],
-                          },
-                          {
-                            key: "equipment",
-                            label: "Жабдық",
-                            values: [
-                              "Садақ",
-                              "Қалқан",
-                              "Домбыра",
-                              "Кітап",
-                              "Қылыш",
-                              "Қамшы",
-                            ],
-                          },
-                        ] as const
-                      ).map((c) => (
-                        <label key={c.key}>
-                          {c.label}
-                          <select
-                            value={player[c.key]}
-                            onChange={(e) =>
-                              setPlayer({
-                                ...player,
-                                [c.key]: e.target.value,
-                              })
-                            }
-                          >
-                            {c.values.map((v) => (
-                              <option key={v}>{v}</option>
-                            ))}
-                          </select>
-                        </label>
-                      ))}
-                    </div>
-                    <StatsView player={player} />
-                    <button
-                      className="gold-button full"
-                      disabled={!player.name.trim()}
-                      onClick={() => {
-                        setPlayer({ ...player, name: player.name.trim() });
-                        setStarted(true);
-                        navigate("world");
-                        setToast(
-                          "Қош келдің, қаһарман! Алғашқы сапарыңды баста.",
-                        );
-                      }}
-                    >
-                      САЯХАТТЫ БАСТАУ <ArrowRight size={18} />
-                    </button>
-                  </div>
-                </div>
-              </section>
-            )}
-            {screen === "world" && (
-              <section className="content-section world-section">
-                <div className="section-heading">
-                  <div>
-                    <div className="eyebrow">САЯХАТЫҢДЫ ЖАЛҒАСТЫР</div>
-                    <h1 className="page-title">Ұлы Дала картасы</h1>
-                    <p>Әр жол — бір аңыз. Әр аңыз — бір жаңа күш.</p>
-                  </div>
-                  <span className="pill">
-                    <span className="status-dot" />
-                    {regions.filter((r) => r.xp <= player.xp).length} / 5 аймақ
-                    ашық
-                  </span>
-                </div>
-                <WorldMap
-                  xp={player.xp}
-                  onSelect={(i) => {
-                    if (player.xp < regions[i].xp) {
-                      setToast(
-                        `${regions[i].name}: ${regions[i].xp} XP жинап аш.`,
-                      );
-                      return;
-                    }
-                    setRegion(i);
-                    update((p) => ({
-                      ...p,
-                      visits: [...new Set([...p.visits, i])],
-                    }));
+              {screen === "learning" && (
+                <LearningClub
+                  date={today()}
+                  progress={
+                    player.learning ?? { completed: [], dailyDates: [] }
+                  }
+                  onComplete={(kind: LearningKind) => {
+                    setStarted(true);
+                    update((p) => completeLearning(p, kind, today()));
+                    playEffect(sound);
                   }}
                 />
-                <div className="world-lower">
-                  <div className="panel">
-                    <div className="eyebrow">
-                      {region === null
-                        ? "СЕНІҢ КЕЛЕСІ ШЫТЫРМАНЫҢ"
-                        : regions[region].name}
-                    </div>
-                    <h2>
-                      {region === null
-                        ? "Шалқұйрықты тап"
-                        : regions[region].sub}
-                    </h2>
-                    <p>
-                      Ер Төстікпен бірге жұмбақтарды шешіп, аңыздың жаңа бетін
-                      аш.
-                    </p>
-                    <button
-                      className="gold-button"
-                      onClick={() => begin(missions[(region ?? 0) * 2])}
-                    >
-                      МИССИЯНЫ БАСТАУ <ArrowRight size={17} />
-                    </button>
-                  </div>
-                  <DailyQuests
-                    player={player}
-                    claim={(id) => {
-                      const q = dailyTemplates.find((q) => q.id === id);
-                      if (!q) return;
-                      const key = q.id.split("-")[0] as
-                        "riddles" | "missions" | "learned";
-                      if (
-                        player.daily[key] < q.target ||
-                        player.daily.claimed.includes(id)
-                      )
-                        return;
-                      update((p) => ({
-                        ...p,
-                        xp: p.xp + q.xp,
-                        coins: p.coins + q.coins,
-                        daily: {
-                          ...p.daily,
-                          claimed: [...p.daily.claimed, id],
-                        },
-                      }));
-                      setToast(`Күндік сыйлық: +${q.xp} XP · +${q.coins} тиын`);
-                    }}
-                  />
-                </div>
-              </section>
-            )}
-            {(screen === "heroes" || screen === "collection") && (
-              <section className="content-section">
-                <div className="eyebrow">
-                  {screen === "heroes"
-                    ? "АҢЫЗДАРДЫҢ ҚАҺАРМАНДАРЫ"
-                    : "СЕНІҢ АҢЫЗДАР ЖИНАҒЫҢ"}
-                </div>
-                <div className="section-heading">
-                  <div>
-                    <h1 className="page-title">
-                      {screen === "heroes"
-                        ? "Қаһармандар"
-                        : "Қаһарман коллекциясы"}
-                    </h1>
-                    <p>
-                      {screen === "heroes"
-                        ? "Халық ертегілері мен батырлық жырлардан туған әлем."
-                        : "Миссияларды аяқта, тәжірибе жина және жаңа карталарды аш."}
-                    </p>
-                  </div>
-                  <span className="pill">
-                    {player.unlocked.length} / 6 ашылды
-                  </span>
-                </div>
-                <div className="hero-grid">
-                  {heroes.map((h, i) => (
-                    <HeroCard
-                      key={h.id}
-                      hero={h}
-                      index={i}
-                      locked={
-                        screen === "collection" &&
-                        !player.unlocked.includes(h.id)
-                      }
-                      onClick={() => learn(h)}
-                    />
-                  ))}
-                </div>
-              </section>
-            )}
-            {screen === "missions" && (
-              <section className="content-section">
-                <div className="eyebrow">БАТЫЛДЫҚ ПЕН АҚЫЛ СЫНАҚТАРЫ</div>
-                <h1 className="page-title">Миссиялар</h1>
-                <p className="muted">
-                  Әр оқиғада 3 сынақ. Сыйлық бір рет беріледі.
-                </p>
-                <div className="mission-grid">
-                  {missions.map((m) => (
-                    <button
-                      key={m.id}
-                      className="panel mission-card"
-                      onClick={() => begin(m)}
-                    >
-                      <div className="mission-top">
-                        <span>
-                          {heroes.find((h) => h.id === m.heroId)?.name}
-                        </span>
-                        {player.completed.includes(m.id) ? (
-                          <Check size={18} />
-                        ) : !player.unlocked.includes(m.heroId) ? (
-                          <Lock size={18} />
-                        ) : (
-                          <Flag size={18} />
-                        )}
-                      </div>
-                      <h3>{m.title}</h3>
-                      <p>{m.description}</p>
-                      <div className="reward-line">
-                        <span>
-                          <Zap size={14} />
-                          {m.xp} XP
-                        </span>
-                        <span>
-                          <Coins size={14} />
-                          {m.coins}
-                        </span>
-                        <ArrowRight size={17} />
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              </section>
-            )}
-            {screen === "missions" && (
-              <section className="content-section">
-                <NationalGamesShelf
-                  onSelect={openNational}
-                  completed={player.nationalCompleted ?? []}
-                />
-              </section>
-            )}
-            {screen === "profile" && (
-              <section className="content-section">
-                <div className="eyebrow">СЕНІҢ САЯХАТЫҢ</div>
-                <h1 className="page-title">Қаһарман профилі</h1>
-                <div className="profile-layout">
-                  <div className="panel profile-card">
-                    <PlayerPortrait player={player} />
-                    <span className="pill">ДЕҢГЕЙ {level}</span>
-                    <h2>{player.name}</h2>
-                    {player.characterId && (
-                      <p className="selected-character-name">
-                        {heroes.find((h) => h.id === player.characterId)?.name}
+              )}
+              {screen === "games" && (
+                <section className="content-section games-hub">
+                  <div className="eyebrow">ОЙНАП ҮЙРЕНЕМІЗ</div>
+                  <h1 className="page-title">Қазақтың дәстүрлі ойындары</h1>
+                  <p>
+                    Ойынды таңдап, бірден баста. Тіркелу қажет емес. Жинаған
+                    ұпайың осы браузерде сақталады.
+                  </p>
+                  <button
+                    className="outline-button learning-hub-link"
+                    onClick={() => navigate("learning")}
+                  >
+                    <Star size={18} /> БІЛІМ САЯХАТЫНА ӨТУ{" "}
+                    <ArrowRight size={18} />
+                  </button>
+                  <div className="chosen-character-banner">
+                    <div>
+                      <strong>
+                        {player.characterId
+                          ? `Менің кейіпкерім: ${heroes.find((h) => h.id === player.characterId)?.name}`
+                          : "Өзіңе ұнаған қаһарманды таңда!"}
+                      </strong>
+                      <p>
+                        Сүйікті кейіпкерің ойын мен профильде сенімен бірге
+                        болады.
                       </p>
-                    )}
+                    </div>
                     <button
-                      className="gold-button"
+                      className="outline-button"
                       onClick={() => setPickingCharacter(true)}
                     >
-                      КЕЙІПКЕРДІ ТАҢДАУ <User size={16} />
+                      {player.characterId
+                        ? "КЕЙІПКЕРДІ АУЫСТЫРУ"
+                        : "КЕЙІПКЕР ТАҢДАУ"}
+                      <User size={18} />
                     </button>
-                    <p className="muted">
-                      {level < 5 ? "Дала саяхатшысы" : "Аңыз сақтаушысы"} ·{" "}
-                      {syncStatus}
-                    </p>
-                    <div className="xp-label">
-                      <span>{player.xp} XP</span>
-                      <span>{next} XP</span>
-                    </div>
-                    <div className="progress">
-                      <span style={{ width: `${percent}%` }} />
-                    </div>
+                  </div>
+                  <NationalGamesShelf
+                    completed={player.nationalCompleted ?? []}
+                    onSelect={openNational}
+                  />
+                  <div className="game-help">
+                    <h3>Қалай ойнаймыз?</h3>
                     <p>
-                      <Coins size={17} />
-                      {player.coins} тиын · {player.completed.length} миссия
+                      Карточканы бас. Ойын ішіндегі нұсқаулықты орында.
+                      Жеңгеннен кейін «Сыйлықты алу» батырмасын басып, ұпайыңды
+                      жина.
                     </p>
                     <button
                       className="outline-button"
-                      onClick={() => navigate("creator")}
+                      onClick={() => {
+                        setIntroStep(0);
+                        navigate("intro");
+                      }}
                     >
-                      Бейнені өзгерту
-                    </button>
-                    <button
-                      className="text-button"
-                      onClick={() => setModal("auth")}
-                    >
-                      {userId ? "Аккаунт" : "Кіру / Тіркелу"}
-                      <ArrowRight size={15} />
+                      ӨЗ ҚАҺАРМАНЫҢДЫ ЖАСАУ <User size={16} />
                     </button>
                   </div>
-                  <div>
-                    <div className="panel">
-                      <h2>Сенің күшің</h2>
-                      <StatsView player={player} />
-                    </div>
-                    <div className="section-heading compact">
-                      <h2>Жетістіктер</h2>
-                      <span className="muted">
-                        {player.achievements.length} / 8
-                      </span>
-                    </div>
-                    <div className="achievement-grid">
-                      {achievements.map((a) => (
-                        <div
-                          key={a.id}
-                          className={`achievement ${player.achievements.includes(a.id) ? "earned" : ""}`}
-                        >
-                          <span>
-                            <Trophy size={22} />
-                          </span>
-                          <div>
-                            <strong>{a.name}</strong>
-                            <small>{a.detail}</small>
-                          </div>
-                          {player.achievements.includes(a.id) && (
-                            <Check size={15} />
-                          )}
-                        </div>
-                      ))}
+                  <div className="section-heading">
+                    <div>
+                      <div className="eyebrow">ҚОСЫМША ЖАТТЫҒУЛАР</div>
+                      <h2>Ақыл мен ептілік</h2>
                     </div>
                   </div>
-                </div>
-                <div className="section-heading">
-                  <h2>Қаһармандарың</h2>
+                  <div className="game-grid">
+                    {(
+                      [
+                        "riddle",
+                        "path",
+                        "memory",
+                        "choice",
+                        "horse",
+                      ] as GameKind[]
+                    ).map((kind, i) => (
+                      <button
+                        key={kind}
+                        className="practice-card"
+                        onClick={() => setPractice(kind)}
+                      >
+                        <span>{["◈", "⌁", "✦", "⚑", "♞"][i]}</span>
+                        <h3>
+                          {
+                            [
+                              "Жұмбақ",
+                              "Дала жолы",
+                              "Есте сақтау",
+                              "Батыр таңдауы",
+                              "Ат жарысы",
+                            ][i]
+                          }
+                        </h3>
+                        <small>
+                          ОЙНАУ <ArrowUpRight size={13} />
+                        </small>
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              )}
+              {screen === "intro" && (
+                <section className="intro-screen">
+                  <span className="intro-emblem">
+                    <Emblem />
+                  </span>
+                  <AnimatePresence mode="wait">
+                    <motion.h1
+                      key={introStep}
+                      initial={{ opacity: 0, y: 25 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      {intro[introStep]}
+                    </motion.h1>
+                  </AnimatePresence>
+                  <div className="intro-dots">
+                    {intro.map((_, i) => (
+                      <span
+                        key={i}
+                        className={i === introStep ? "active" : ""}
+                      />
+                    ))}
+                  </div>
                   <button
                     className="text-button"
-                    onClick={() => navigate("collection")}
+                    onClick={() => navigate("creator")}
                   >
-                    Коллекция <ArrowRight size={16} />
+                    Өткізіп жіберу <ArrowRight size={16} />
                   </button>
-                </div>
-                <div className="hero-grid">
-                  {heroes
-                    .filter((h) => player.unlocked.includes(h.id))
-                    .map((h) => (
+                </section>
+              )}
+              {screen === "creator" && (
+                <section className="content-section">
+                  <div className="eyebrow">
+                    СЕНІҢ АҢЫЗЫҢ ОСЫ ЖЕРДЕН БАСТАЛАДЫ
+                  </div>
+                  <h1 className="page-title">Өз қаһарманыңды жаса</h1>
+                  <div className="creator-layout">
+                    <div className="creator-preview">
+                      <PlayerPortrait player={player} />
+                      <div>
+                        <small>ДЕҢГЕЙ {level}</small>
+                        <h2>{player.name || "Жас қаһарман"}</h2>
+                        <p>
+                          {player.headwear} · {player.equipment} ·{" "}
+                          {player.accessory}
+                        </p>
+                        <p>
+                          {player.hair} · {player.outfit} · {player.armor} сауыт
+                        </p>
+                      </div>
+                    </div>
+                    <div className="panel creator-controls">
+                      <label>
+                        Қаһарманның аты
+                        <input
+                          maxLength={24}
+                          value={player.name}
+                          onChange={(e) =>
+                            setPlayer({ ...player, name: e.target.value })
+                          }
+                        />
+                      </label>
+                      <button
+                        className="outline-button"
+                        onClick={() => setPickingCharacter(true)}
+                      >
+                        ЕРТЕГІ КЕЙІПКЕРІН ТАҢДАУ <User size={16} />
+                      </button>
+                      <label>Бейнеңді таңда</label>
+                      <div className="avatar-choices">
+                        {heroes.map((h, i) => (
+                          <button
+                            className={player.avatar === i ? "selected" : ""}
+                            key={h.id}
+                            onClick={() =>
+                              setPlayer({
+                                ...player,
+                                avatar: i,
+                                characterId: null,
+                              })
+                            }
+                            aria-label={`Бейне ${i + 1}`}
+                          >
+                            <Image
+                              src={`/art/hero-${i}.svg`}
+                              alt=""
+                              width={60}
+                              height={75}
+                            />
+                          </button>
+                        ))}
+                      </div>
+                      <div className="customization-grid">
+                        {(
+                          [
+                            {
+                              key: "hair",
+                              label: "Шаш үлгісі",
+                              values: ["Қысқа", "Ұзын", "Өрілген"],
+                            },
+                            {
+                              key: "outfit",
+                              label: "Киім",
+                              values: [
+                                "Көк шапан",
+                                "Жасыл шапан",
+                                "Алтын шапан",
+                              ],
+                            },
+                            {
+                              key: "armor",
+                              label: "Сауыт",
+                              values: ["Жеңіл", "Былғары", "Темір"],
+                            },
+                            {
+                              key: "headwear",
+                              label: "Бас киім",
+                              values: ["Дулыға", "Тақия", "Бөрік"],
+                            },
+                            {
+                              key: "accessory",
+                              label: "Аксессуар",
+                              values: ["Тұмар", "Белдік", "Білезік"],
+                            },
+                            {
+                              key: "equipment",
+                              label: "Жабдық",
+                              values: [
+                                "Садақ",
+                                "Қалқан",
+                                "Домбыра",
+                                "Кітап",
+                                "Қылыш",
+                                "Қамшы",
+                              ],
+                            },
+                          ] as const
+                        ).map((c) => (
+                          <label key={c.key}>
+                            {c.label}
+                            <select
+                              value={player[c.key]}
+                              onChange={(e) =>
+                                setPlayer({
+                                  ...player,
+                                  [c.key]: e.target.value,
+                                })
+                              }
+                            >
+                              {c.values.map((v) => (
+                                <option key={v}>{v}</option>
+                              ))}
+                            </select>
+                          </label>
+                        ))}
+                      </div>
+                      <StatsView player={player} />
+                      <button
+                        className="gold-button full"
+                        disabled={!player.name.trim()}
+                        onClick={() => {
+                          setPlayer({ ...player, name: player.name.trim() });
+                          setStarted(true);
+                          navigate("world");
+                          setToast(
+                            "Қош келдің, қаһарман! Алғашқы сапарыңды баста.",
+                          );
+                        }}
+                      >
+                        САЯХАТТЫ БАСТАУ <ArrowRight size={18} />
+                      </button>
+                    </div>
+                  </div>
+                </section>
+              )}
+              {screen === "world" && (
+                <section className="content-section world-section">
+                  <div className="section-heading">
+                    <div>
+                      <div className="eyebrow">САЯХАТЫҢДЫ ЖАЛҒАСТЫР</div>
+                      <h1 className="page-title">Ұлы Дала картасы</h1>
+                      <p>Әр жол — бір аңыз. Әр аңыз — бір жаңа күш.</p>
+                    </div>
+                    <span className="pill">
+                      <span className="status-dot" />
+                      {regions.filter((r) => r.xp <= player.xp).length} / 5
+                      аймақ ашық
+                    </span>
+                  </div>
+                  <WorldMap
+                    xp={player.xp}
+                    onSelect={(i) => {
+                      if (player.xp < regions[i].xp) {
+                        setToast(
+                          `${regions[i].name}: ${regions[i].xp} XP жинап аш.`,
+                        );
+                        return;
+                      }
+                      setRegion(i);
+                      update((p) => ({
+                        ...p,
+                        visits: [...new Set([...p.visits, i])],
+                      }));
+                    }}
+                  />
+                  <div className="world-lower">
+                    <div className="panel">
+                      <div className="eyebrow">
+                        {region === null
+                          ? "СЕНІҢ КЕЛЕСІ ШЫТЫРМАНЫҢ"
+                          : regions[region].name}
+                      </div>
+                      <h2>
+                        {region === null
+                          ? "Шалқұйрықты тап"
+                          : regions[region].sub}
+                      </h2>
+                      <p>
+                        Ер Төстікпен бірге жұмбақтарды шешіп, аңыздың жаңа бетін
+                        аш.
+                      </p>
+                      <button
+                        className="gold-button"
+                        onClick={() => begin(missions[(region ?? 0) * 2])}
+                      >
+                        МИССИЯНЫ БАСТАУ <ArrowRight size={17} />
+                      </button>
+                    </div>
+                    <DailyQuests
+                      player={player}
+                      claim={(id) => {
+                        const q = dailyTemplates.find((q) => q.id === id);
+                        if (!q) return;
+                        const key = q.id.split("-")[0] as
+                          "riddles" | "missions" | "learned";
+                        if (
+                          player.daily[key] < q.target ||
+                          player.daily.claimed.includes(id)
+                        )
+                          return;
+                        update((p) => ({
+                          ...p,
+                          xp: p.xp + q.xp,
+                          coins: p.coins + q.coins,
+                          daily: {
+                            ...p.daily,
+                            claimed: [...p.daily.claimed, id],
+                          },
+                        }));
+                        setToast(
+                          `Күндік сыйлық: +${q.xp} XP · +${q.coins} тиын`,
+                        );
+                      }}
+                    />
+                  </div>
+                </section>
+              )}
+              {(screen === "heroes" || screen === "collection") && (
+                <section className="content-section">
+                  <div className="eyebrow">
+                    {screen === "heroes"
+                      ? "АҢЫЗДАРДЫҢ ҚАҺАРМАНДАРЫ"
+                      : "СЕНІҢ АҢЫЗДАР ЖИНАҒЫҢ"}
+                  </div>
+                  <div className="section-heading">
+                    <div>
+                      <h1 className="page-title">
+                        {screen === "heroes"
+                          ? "Қаһармандар"
+                          : "Қаһарман коллекциясы"}
+                      </h1>
+                      <p>
+                        {screen === "heroes"
+                          ? "Халық ертегілері мен батырлық жырлардан туған әлем."
+                          : "Миссияларды аяқта, тәжірибе жина және жаңа карталарды аш."}
+                      </p>
+                    </div>
+                    <span className="pill">
+                      {player.unlocked.length} / 6 ашылды
+                    </span>
+                  </div>
+                  <div className="hero-grid">
+                    {heroes.map((h, i) => (
                       <HeroCard
                         key={h.id}
                         hero={h}
-                        index={heroes.indexOf(h)}
+                        index={i}
+                        locked={
+                          screen === "collection" &&
+                          !player.unlocked.includes(h.id)
+                        }
                         onClick={() => learn(h)}
                       />
                     ))}
-                </div>
-              </section>
-            )}
-            {screen === "leaderboard" && (
-              <Leaderboard player={player} tab={tab} setTab={setTab} />
-            )}
-          </motion.div>
-        </main>
-        <footer>
-          <button className="brand" onClick={() => navigate("home")}>
-            <span className="emblem">
-              <Emblem />
-            </span>
-            <span>ҚАЗАҚ ҚАҺАРМАНДАРЫ</span>
-          </button>
-          <p>Ертегілерімізді бірге танып, бірге сақтайық.</p>
-          <span>© 2026 Қазақ қаһармандары</span>
-        </footer>
-        <nav className="mobile-nav">
-          {navigation.map((n) => (
-            <button
-              key={n.id}
-              className={screen === n.id ? "active" : ""}
-              onClick={() => navigate(n.id)}
-            >
-              <n.icon size={19} />
-              <small>{n.label}</small>
-            </button>
-          ))}
-        </nav>
-        <AnimatePresence>
-          {pickingCharacter && (
-            <Overlay close={() => setPickingCharacter(false)}>
-              <CharacterPicker
-                current={player.characterId}
-                onSave={(id) => {
-                  setStarted(true);
-                  update((p) => ({
-                    ...p,
-                    characterId: id,
-                    avatar: heroes.findIndex((h) => h.id === id),
-                  }));
-                  setPickingCharacter(false);
-                  setToast(
-                    `${heroes.find((h) => h.id === id)?.name} — сенің кейіпкерің!`,
-                  );
-                }}
-              />
-            </Overlay>
-          )}
-          {hero && (
-            <Overlay close={() => setHero(null)}>
-              <div className="hero-detail">
-                <div className="detail-artwork">
-                  <HeroArtwork src={hero.portrait} alt={hero.name} />
-                </div>
-                <div>
-                  <div className="eyebrow">{hero.category}</div>
-                  <h1>{hero.name}</h1>
-                  <p>{hero.description}</p>
-                  <small className="muted">
-                    Ойын көрсеткіштері — көркем ойын моделі.
-                  </small>
-                  <h3>Қабілеттер</h3>
-                  <span className="pill">
-                    <Sparkles size={15} />
-                    {hero.ability}
-                  </span>
-                  <StatsView player={{ stats: hero.stats }} />
-                  <h3>Миссиялар</h3>
-                  {missions
-                    .filter((m) => m.heroId === hero.id)
-                    .map((m) => (
+                  </div>
+                </section>
+              )}
+              {screen === "missions" && (
+                <section className="content-section">
+                  <div className="eyebrow">БАТЫЛДЫҚ ПЕН АҚЫЛ СЫНАҚТАРЫ</div>
+                  <h1 className="page-title">Миссиялар</h1>
+                  <p className="muted">
+                    Әр оқиғада 3 сынақ. Сыйлық бір рет беріледі.
+                  </p>
+                  <div className="mission-grid">
+                    {missions.map((m) => (
                       <button
                         key={m.id}
-                        className="detail-mission"
+                        className="panel mission-card"
                         onClick={() => begin(m)}
                       >
-                        <span>
-                          {m.title}
-                          <small>
-                            +{m.xp} XP · +{m.coins} тиын
-                          </small>
-                        </span>
-                        {player.unlocked.includes(hero.id) ? (
-                          <ArrowRight size={18} />
-                        ) : (
-                          <Lock size={18} />
-                        )}
+                        <div className="mission-top">
+                          <span>
+                            {heroes.find((h) => h.id === m.heroId)?.name}
+                          </span>
+                          {player.completed.includes(m.id) ? (
+                            <Check size={18} />
+                          ) : !player.unlocked.includes(m.heroId) ? (
+                            <Lock size={18} />
+                          ) : (
+                            <Flag size={18} />
+                          )}
+                        </div>
+                        <h3>{m.title}</h3>
+                        <p>{m.description}</p>
+                        <div className="reward-line">
+                          <span>
+                            <Zap size={14} />
+                            {m.xp} XP
+                          </span>
+                          <span>
+                            <Coins size={14} />
+                            {m.coins}
+                          </span>
+                          <ArrowRight size={17} />
+                        </div>
                       </button>
                     ))}
-                  {!player.unlocked.includes(hero.id) && (
-                    <p className="muted">
-                      Ашу үшін {hero.threshold} XP жина. Қазір: {player.xp} XP.
-                    </p>
+                  </div>
+                </section>
+              )}
+              {screen === "missions" && (
+                <section className="content-section">
+                  <NationalGamesShelf
+                    onSelect={openNational}
+                    completed={player.nationalCompleted ?? []}
+                  />
+                </section>
+              )}
+              {screen === "profile" && (
+                <section className="content-section">
+                  <div className="eyebrow">СЕНІҢ САЯХАТЫҢ</div>
+                  <h1 className="page-title">Қаһарман профилі</h1>
+                  <div className="profile-layout">
+                    <div className="panel profile-card">
+                      <PlayerPortrait player={player} />
+                      <span className="pill">ДЕҢГЕЙ {level}</span>
+                      <h2>{player.name}</h2>
+                      {player.characterId && (
+                        <p className="selected-character-name">
+                          {
+                            heroes.find((h) => h.id === player.characterId)
+                              ?.name
+                          }
+                        </p>
+                      )}
+                      <button
+                        className="gold-button"
+                        onClick={() => setPickingCharacter(true)}
+                      >
+                        КЕЙІПКЕРДІ ТАҢДАУ <User size={16} />
+                      </button>
+                      <p className="muted">
+                        {level < 5 ? "Дала саяхатшысы" : "Аңыз сақтаушысы"} ·{" "}
+                        {syncStatus}
+                      </p>
+                      <div className="xp-label">
+                        <span>{player.xp} XP</span>
+                        <span>{next} XP</span>
+                      </div>
+                      <div className="progress">
+                        <span style={{ width: `${percent}%` }} />
+                      </div>
+                      <p>
+                        <Coins size={17} />
+                        {player.coins} тиын · {player.completed.length} миссия
+                      </p>
+                      <button
+                        className="outline-button"
+                        onClick={() => navigate("creator")}
+                      >
+                        Бейнені өзгерту
+                      </button>
+                      <button
+                        className="text-button"
+                        onClick={() => setModal("auth")}
+                      >
+                        {userId ? "Аккаунт" : "Кіру / Тіркелу"}
+                        <ArrowRight size={15} />
+                      </button>
+                    </div>
+                    <div>
+                      <div className="panel">
+                        <h2>Сенің күшің</h2>
+                        <StatsView player={player} />
+                      </div>
+                      <div className="section-heading compact">
+                        <h2>Жетістіктер</h2>
+                        <span className="muted">
+                          {player.achievements.length} / 8
+                        </span>
+                      </div>
+                      <div className="achievement-grid">
+                        {achievements.map((a) => (
+                          <div
+                            key={a.id}
+                            className={`achievement ${player.achievements.includes(a.id) ? "earned" : ""}`}
+                          >
+                            <span>
+                              <Trophy size={22} />
+                            </span>
+                            <div>
+                              <strong>{a.name}</strong>
+                              <small>{a.detail}</small>
+                            </div>
+                            {player.achievements.includes(a.id) && (
+                              <Check size={15} />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="section-heading">
+                    <h2>Қаһармандарың</h2>
+                    <button
+                      className="text-button"
+                      onClick={() => navigate("collection")}
+                    >
+                      Коллекция <ArrowRight size={16} />
+                    </button>
+                  </div>
+                  <div className="hero-grid">
+                    {heroes
+                      .filter((h) => player.unlocked.includes(h.id))
+                      .map((h) => (
+                        <HeroCard
+                          key={h.id}
+                          hero={h}
+                          index={heroes.indexOf(h)}
+                          onClick={() => learn(h)}
+                        />
+                      ))}
+                  </div>
+                </section>
+              )}
+              {screen === "leaderboard" && (
+                <Leaderboard player={player} tab={tab} setTab={setTab} />
+              )}
+            </motion.div>
+          </main>
+          <footer>
+            <button className="brand" onClick={() => navigate("home")}>
+              <span className="emblem">
+                <Emblem />
+              </span>
+              <span>ҚАЗАҚ ҚАҺАРМАНДАРЫ</span>
+            </button>
+            <p>Ертегілерімізді бірге танып, бірге сақтайық.</p>
+            <span>© 2026 Қазақ қаһармандары</span>
+          </footer>
+          <nav className="mobile-nav">
+            {navigation.map((n) => (
+              <button
+                key={n.id}
+                className={screen === n.id ? "active" : ""}
+                onClick={() => navigate(n.id)}
+              >
+                <n.icon size={19} />
+                <small>{n.label}</small>
+              </button>
+            ))}
+          </nav>
+          <AnimatePresence>
+            {pickingCharacter && (
+              <Overlay close={() => setPickingCharacter(false)}>
+                <CharacterPicker
+                  current={player.characterId}
+                  onSave={(id) => {
+                    setStarted(true);
+                    update((p) => ({
+                      ...p,
+                      characterId: id,
+                      avatar: heroes.findIndex((h) => h.id === id),
+                    }));
+                    setPickingCharacter(false);
+                    setToast(
+                      `${heroes.find((h) => h.id === id)?.name} — сенің кейіпкерің!`,
+                    );
+                  }}
+                />
+              </Overlay>
+            )}
+            {hero && (
+              <Overlay close={() => setHero(null)}>
+                <div className="hero-detail">
+                  <div className="detail-artwork">
+                    <HeroArtwork src={hero.portrait} alt={hero.name} />
+                  </div>
+                  <div>
+                    <div className="eyebrow">{hero.category}</div>
+                    <h1>{hero.name}</h1>
+                    <p>{hero.description}</p>
+                    <small className="muted">
+                      Ойын көрсеткіштері — көркем ойын моделі.
+                    </small>
+                    <h3>Қабілеттер</h3>
+                    <span className="pill">
+                      <Sparkles size={15} />
+                      {hero.ability}
+                    </span>
+                    <StatsView player={{ stats: hero.stats }} />
+                    <h3>Миссиялар</h3>
+                    {missions
+                      .filter((m) => m.heroId === hero.id)
+                      .map((m) => (
+                        <button
+                          key={m.id}
+                          className="detail-mission"
+                          onClick={() => begin(m)}
+                        >
+                          <span>
+                            {m.title}
+                            <small>
+                              +{m.xp} XP · +{m.coins} тиын
+                            </small>
+                          </span>
+                          {player.unlocked.includes(hero.id) ? (
+                            <ArrowRight size={18} />
+                          ) : (
+                            <Lock size={18} />
+                          )}
+                        </button>
+                      ))}
+                    {!player.unlocked.includes(hero.id) && (
+                      <p className="muted">
+                        Ашу үшін {hero.threshold} XP жина. Қазір: {player.xp}{" "}
+                        XP.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </Overlay>
+            )}
+            {mission && (
+              <Overlay
+                close={() => {
+                  setMission(null);
+                  setStage(-1);
+                }}
+              >
+                <div className="mission-modal">
+                  <div className="eyebrow">
+                    {heroes.find((h) => h.id === mission.heroId)?.name} ·
+                    ОҚИҒАЛЫ МИССИЯ
+                  </div>
+                  <h1>{mission.title}</h1>
+                  <div className="stage-track">
+                    {mission.stages.map((s, i) => (
+                      <span key={i} className={i <= stage ? "active" : ""}>
+                        {i < stage ? <Check size={13} /> : i + 1}
+                        <small>
+                          {
+                            {
+                              riddle: "Жұмбақ",
+                              path: "Жол",
+                              memory: "Есте сақтау",
+                              choice: "Шешім",
+                              horse: "Жарыс",
+                              battle: "Сайыс",
+                            }[s]
+                          }
+                        </small>
+                      </span>
+                    ))}
+                  </div>
+                  {stage < 0 ? (
+                    <>
+                      <p>{mission.description}</p>
+                      <div className="mission-rewards">
+                        <span>
+                          <Zap />
+                          {mission.xp} XP
+                        </span>
+                        <span>
+                          <Coins />
+                          {mission.coins} тиын
+                        </span>
+                        <span>
+                          <Trophy />
+                          Жетістік
+                        </span>
+                      </div>
+                      <button
+                        className="gold-button"
+                        onClick={() => {
+                          setStage(0);
+                          update((p) => ({
+                            ...p,
+                            missionProgress: {
+                              ...p.missionProgress,
+                              [mission.id]: 0,
+                            },
+                          }));
+                        }}
+                      >
+                        СЫНАҚТАРДЫ БАСТАУ <ArrowRight size={17} />
+                      </button>
+                    </>
+                  ) : (
+                    <MiniGame
+                      key={`${mission.id}-${stage}`}
+                      kind={mission.stages[stage]}
+                      onDecision={(i) =>
+                        update((p) => {
+                          const key = (
+                            ["courage", "wisdom", "agility"] as const
+                          )[i];
+                          return {
+                            ...p,
+                            stats: {
+                              ...p.stats,
+                              [key]: Math.min(100, p.stats[key] + 2),
+                            },
+                          };
+                        })
+                      }
+                      onRiddle={() =>
+                        update((p) => ({
+                          ...p,
+                          riddles: p.riddles + 1,
+                          daily: { ...p.daily, riddles: p.daily.riddles + 1 },
+                        }))
+                      }
+                      onComplete={() => {
+                        if (stage === mission.stages.length - 1) finish();
+                        else {
+                          setStage(stage + 1);
+                          update((p) => ({
+                            ...p,
+                            missionProgress: {
+                              ...p.missionProgress,
+                              [mission.id]: stage + 1,
+                            },
+                          }));
+                        }
+                      }}
+                    />
                   )}
                 </div>
-              </div>
-            </Overlay>
-          )}
-          {mission && (
-            <Overlay
-              close={() => {
-                setMission(null);
-                setStage(-1);
-              }}
-            >
-              <div className="mission-modal">
-                <div className="eyebrow">
-                  {heroes.find((h) => h.id === mission.heroId)?.name} · ОҚИҒАЛЫ
-                  МИССИЯ
-                </div>
-                <h1>{mission.title}</h1>
-                <div className="stage-track">
-                  {mission.stages.map((s, i) => (
-                    <span key={i} className={i <= stage ? "active" : ""}>
-                      {i < stage ? <Check size={13} /> : i + 1}
-                      <small>
-                        {
-                          {
-                            riddle: "Жұмбақ",
-                            path: "Жол",
-                            memory: "Есте сақтау",
-                            choice: "Шешім",
-                            horse: "Жарыс",
-                            battle: "Сайыс",
-                          }[s]
-                        }
-                      </small>
+              </Overlay>
+            )}
+            {reward && (
+              <Overlay
+                close={() => {
+                  setReward(null);
+                  navigate("world");
+                }}
+              >
+                <div className="reward-modal">
+                  <div className="reward-emblem">
+                    <Trophy size={54} />
+                  </div>
+                  <div className="eyebrow">АҢЫЗДЫҢ ЖАҢА БЕТІ АШЫЛДЫ</div>
+                  <h1>Жарайсың, қаһарман!</h1>
+                  <p>«{reward.title}» миссиясы аяқталды.</p>
+                  <div className="reward-amounts">
+                    <span>
+                      +{reward.xp}
+                      <small>ТӘЖІРИБЕ XP</small>
                     </span>
-                  ))}
-                </div>
-                {stage < 0 ? (
-                  <>
-                    <p>{mission.description}</p>
-                    <div className="mission-rewards">
-                      <span>
-                        <Zap />
-                        {mission.xp} XP
-                      </span>
-                      <span>
-                        <Coins />
-                        {mission.coins} тиын
-                      </span>
-                      <span>
-                        <Trophy />
-                        Жетістік
-                      </span>
-                    </div>
+                    <span>
+                      +{reward.coins}
+                      <small>АЛТЫН ТИЫН</small>
+                    </span>
+                  </div>
+                  <span className="pill">
+                    <Trophy size={16} />
+                    Алғашқы қадам · Жетістік ашылды
+                  </span>
+                  <p className="muted">
+                    {reward.xp === 0
+                      ? "Бұл миссияның сыйлығы бұрын алынған."
+                      : "Барлық қасиеттер +2 · Қаһарманның қабілеті ашылды"}
+                  </p>
+                  <div className="cta-row">
                     <button
                       className="gold-button"
                       onClick={() => {
-                        setStage(0);
-                        update((p) => ({
-                          ...p,
-                          missionProgress: {
-                            ...p.missionProgress,
-                            [mission.id]: 0,
-                          },
-                        }));
+                        setReward(null);
+                        navigate("world");
                       }}
                     >
-                      СЫНАҚТАРДЫ БАСТАУ <ArrowRight size={17} />
+                      КАРТАҒА ОРАЛУ <Map size={17} />
                     </button>
-                  </>
-                ) : (
-                  <MiniGame
-                    key={`${mission.id}-${stage}`}
-                    kind={mission.stages[stage]}
-                    onDecision={(i) =>
-                      update((p) => {
-                        const key = (["courage", "wisdom", "agility"] as const)[
-                          i
-                        ];
-                        return {
-                          ...p,
-                          stats: {
-                            ...p.stats,
-                            [key]: Math.min(100, p.stats[key] + 2),
-                          },
-                        };
-                      })
+                    <button
+                      className="outline-button"
+                      onClick={() => {
+                        setReward(null);
+                        navigate("profile");
+                      }}
+                    >
+                      ПРОФИЛЬ <User size={17} />
+                    </button>
+                  </div>
+                </div>
+              </Overlay>
+            )}
+            {national && (
+              <Overlay close={() => setNational(null)}>
+                <NationalGame
+                  kind={national}
+                  onComplete={() => {
+                    const g = nationalGames.find((g) => g.id === national)!;
+                    if (!started) {
+                      setToast(
+                        "Ойын аяқталды! Өз қаһарманыңды жасап, келесі ойында сыйлық ал.",
+                      );
+                    } else if (
+                      (player.nationalCompleted ?? []).includes(national)
+                    ) {
+                      setToast(
+                        "Жарайсың! Бұл ойынның алғашқы сыйлығы бұрын алынған.",
+                      );
+                    } else {
+                      update((p) => ({
+                        ...p,
+                        xp: p.xp + g.xp,
+                        coins: p.coins + g.coins,
+                        nationalCompleted: [
+                          ...(p.nationalCompleted ?? []),
+                          national,
+                        ],
+                        stats: {
+                          ...p.stats,
+                          [national === "arqan" ? "strength" : "agility"]:
+                            Math.min(
+                              100,
+                              p.stats[
+                                national === "arqan" ? "strength" : "agility"
+                              ] + 2,
+                            ),
+                        },
+                      }));
+                      playEffect(sound);
+                      setToast(`${g.name}: +${g.xp} XP · +${g.coins} тиын`);
                     }
-                    onRiddle={() =>
+                    setNational(null);
+                  }}
+                />
+              </Overlay>
+            )}
+            {practice && (
+              <Overlay close={() => setPractice(null)}>
+                <MiniGame
+                  kind={practice}
+                  onRiddle={() => {
+                    if (started)
                       update((p) => ({
                         ...p,
                         riddles: p.riddles + 1,
                         daily: { ...p.daily, riddles: p.daily.riddles + 1 },
-                      }))
-                    }
-                    onComplete={() => {
-                      if (stage === mission.stages.length - 1) finish();
-                      else {
-                        setStage(stage + 1);
-                        update((p) => ({
-                          ...p,
-                          missionProgress: {
-                            ...p.missionProgress,
-                            [mission.id]: stage + 1,
-                          },
-                        }));
-                      }
-                    }}
-                  />
-                )}
-              </div>
-            </Overlay>
-          )}
-          {reward && (
-            <Overlay
-              close={() => {
-                setReward(null);
-                navigate("world");
-              }}
-            >
-              <div className="reward-modal">
-                <div className="reward-emblem">
-                  <Trophy size={54} />
-                </div>
-                <div className="eyebrow">АҢЫЗДЫҢ ЖАҢА БЕТІ АШЫЛДЫ</div>
-                <h1>Жарайсың, қаһарман!</h1>
-                <p>«{reward.title}» миссиясы аяқталды.</p>
-                <div className="reward-amounts">
-                  <span>
-                    +{reward.xp}
-                    <small>ТӘЖІРИБЕ XP</small>
-                  </span>
-                  <span>
-                    +{reward.coins}
-                    <small>АЛТЫН ТИЫН</small>
-                  </span>
-                </div>
-                <span className="pill">
-                  <Trophy size={16} />
-                  Алғашқы қадам · Жетістік ашылды
-                </span>
-                <p className="muted">
-                  {reward.xp === 0
-                    ? "Бұл миссияның сыйлығы бұрын алынған."
-                    : "Барлық қасиеттер +2 · Қаһарманның қабілеті ашылды"}
-                </p>
-                <div className="cta-row">
-                  <button
-                    className="gold-button"
-                    onClick={() => {
-                      setReward(null);
-                      navigate("world");
-                    }}
-                  >
-                    КАРТАҒА ОРАЛУ <Map size={17} />
-                  </button>
-                  <button
-                    className="outline-button"
-                    onClick={() => {
-                      setReward(null);
-                      navigate("profile");
-                    }}
-                  >
-                    ПРОФИЛЬ <User size={17} />
-                  </button>
-                </div>
-              </div>
-            </Overlay>
-          )}
-          {national && (
-            <Overlay close={() => setNational(null)}>
-              <NationalGame
-                kind={national}
-                onComplete={() => {
-                  const g = nationalGames.find((g) => g.id === national)!;
-                  if (!started) {
-                    setToast(
-                      "Ойын аяқталды! Өз қаһарманыңды жасап, келесі ойында сыйлық ал.",
-                    );
-                  } else if (
-                    (player.nationalCompleted ?? []).includes(national)
-                  ) {
-                    setToast(
-                      "Жарайсың! Бұл ойынның алғашқы сыйлығы бұрын алынған.",
-                    );
-                  } else {
-                    update((p) => ({
-                      ...p,
-                      xp: p.xp + g.xp,
-                      coins: p.coins + g.coins,
-                      nationalCompleted: [
-                        ...(p.nationalCompleted ?? []),
-                        national,
-                      ],
-                      stats: {
-                        ...p.stats,
-                        [national === "togyz" ? "wisdom" : "agility"]: Math.min(
-                          100,
-                          p.stats[national === "togyz" ? "wisdom" : "agility"] +
-                            2,
-                        ),
-                      },
-                    }));
-                    playEffect(sound);
-                    setToast(`${g.name}: +${g.xp} XP · +${g.coins} тиын`);
-                  }
-                  setNational(null);
-                }}
-              />
-            </Overlay>
-          )}
-          {practice && (
-            <Overlay close={() => setPractice(null)}>
-              <MiniGame
-                kind={practice}
-                onRiddle={() => {
-                  if (started)
-                    update((p) => ({
-                      ...p,
-                      riddles: p.riddles + 1,
-                      daily: { ...p.daily, riddles: p.daily.riddles + 1 },
-                    }));
-                }}
-                onComplete={() => {
-                  setPractice(null);
-                  setToast("Сынақ аяқталды! Миссия ойнап, XP жина.");
-                }}
-              />
-            </Overlay>
-          )}
-          {modal && (
-            <Overlay close={() => setModal(null)}>
-              {modal === "settings" ? (
-                <div className="settings-panel">
-                  <div className="eyebrow">ӨЗ ЫҢҒАЙЫҢА БЕЙІМДЕ</div>
-                  <h2>Баптаулар</h2>
-                  <label className="toggle">
-                    Музыка
-                    <input
-                      type="checkbox"
-                      checked={sound.music}
-                      onChange={(e) => {
-                        if (!musicAudio.current) {
-                          const audio = new Audio("/audio/steppe-ambience.wav");
-                          audio.loop = true;
-                          musicAudio.current = audio;
+                      }));
+                  }}
+                  onComplete={() => {
+                    setPractice(null);
+                    setToast("Сынақ аяқталды! Миссия ойнап, XP жина.");
+                  }}
+                />
+              </Overlay>
+            )}
+            {modal && (
+              <Overlay close={() => setModal(null)}>
+                {modal === "settings" ? (
+                  <div className="settings-panel">
+                    <div className="eyebrow">ӨЗ ЫҢҒАЙЫҢА БЕЙІМДЕ</div>
+                    <h2>Баптаулар</h2>
+                    <label className="toggle">
+                      Музыка
+                      <input
+                        type="checkbox"
+                        checked={sound.music}
+                        onChange={(e) => {
+                          if (!musicAudio.current) {
+                            const audio = new Audio(
+                              "/audio/steppe-ambience.wav",
+                            );
+                            audio.loop = true;
+                            musicAudio.current = audio;
+                          }
+                          setSound({ ...sound, music: e.target.checked });
+                        }}
+                      />
+                    </label>
+                    <label className="toggle">
+                      Дыбыс әсерлері
+                      <input
+                        type="checkbox"
+                        checked={sound.effects}
+                        onChange={(e) =>
+                          setSound({ ...sound, effects: e.target.checked })
                         }
-                        setSound({ ...sound, music: e.target.checked });
-                      }}
-                    />
-                  </label>
-                  <label className="toggle">
-                    Дыбыс әсерлері
-                    <input
-                      type="checkbox"
-                      checked={sound.effects}
-                      onChange={(e) =>
-                        setSound({ ...sound, effects: e.target.checked })
-                      }
-                    />
-                  </label>
-                  <label>
-                    Дыбыс деңгейі
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step=".05"
-                      value={sound.volume}
-                      onChange={(e) =>
-                        setSound({ ...sound, volume: Number(e.target.value) })
-                      }
-                    />
-                  </label>
-                  <p className="muted">
-                    Ойын қазақ тілінде. Аккаунтсыз да ойнай аласың.
-                  </p>
-                  <button
-                    className="outline-button"
-                    onClick={() => setModal("auth")}
-                  >
-                    Аккаунт <User size={16} />
-                  </button>
-                </div>
-              ) : (
-                <div className="settings-panel">
-                  <div className="eyebrow">САЯХАТЫҢДЫ САҚТА</div>
-                  <h2>{authMode === "login" ? "Аккаунтқа кіру" : "Тіркелу"}</h2>
-                  {userId ? (
-                    <>
-                      <p>Прогресс аккаунтыңа сақталады.</p>
-                      <button
-                        className="outline-button"
-                        onClick={() =>
-                          void supabase?.auth
-                            .signOut()
-                            .then(() => setModal(null))
+                      />
+                    </label>
+                    <label>
+                      Дыбыс деңгейі
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step=".05"
+                        value={sound.volume}
+                        onChange={(e) =>
+                          setSound({ ...sound, volume: Number(e.target.value) })
                         }
-                      >
-                        Аккаунттан шығу
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <form action={auth}>
-                        <label>
-                          Email
-                          <input
-                            name="email"
-                            type="email"
-                            required
-                            autoComplete="email"
-                          />
-                        </label>
-                        <label>
-                          Құпиясөз
-                          <input
-                            name="password"
-                            type="password"
-                            minLength={8}
-                            required
-                            autoComplete={
-                              authMode === "login"
-                                ? "current-password"
-                                : "new-password"
-                            }
-                          />
-                        </label>
-                        <button className="gold-button full" type="submit">
-                          {authMode === "login" ? "КІРУ" : "ТІРКЕЛУ"}
+                      />
+                    </label>
+                    <p className="muted">
+                      Ойын қазақ тілінде. Аккаунтсыз да ойнай аласың.
+                    </p>
+                    <button
+                      className="outline-button"
+                      onClick={() => setModal("auth")}
+                    >
+                      Аккаунт <User size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="settings-panel">
+                    <div className="eyebrow">САЯХАТЫҢДЫ САҚТА</div>
+                    <h2>
+                      {authMode === "login" ? "Аккаунтқа кіру" : "Тіркелу"}
+                    </h2>
+                    {userId ? (
+                      <>
+                        <p>Прогресс аккаунтыңа сақталады.</p>
+                        <button
+                          className="outline-button"
+                          onClick={() =>
+                            void supabase?.auth
+                              .signOut()
+                              .then(() => setModal(null))
+                          }
+                        >
+                          Аккаунттан шығу
                         </button>
-                      </form>
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          setAuthMode(
-                            authMode === "login" ? "signup" : "login",
-                          );
-                          setAuthMessage("");
-                        }}
-                      >
-                        {authMode === "login"
-                          ? "Жаңа аккаунт жасау"
-                          : "Аккаунтым бар"}
-                      </button>
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          setModal(null);
-                          start();
-                        }}
-                      >
-                        Қонақ ретінде ойнау <ArrowRight size={16} />
-                      </button>
-                      <p role="status" className="muted">
-                        {authMessage}
-                      </p>
-                    </>
-                  )}
-                </div>
-              )}
-            </Overlay>
+                      </>
+                    ) : (
+                      <>
+                        <form action={auth}>
+                          <label>
+                            Email
+                            <input
+                              name="email"
+                              type="email"
+                              required
+                              autoComplete="email"
+                            />
+                          </label>
+                          <label>
+                            Құпиясөз
+                            <input
+                              name="password"
+                              type="password"
+                              minLength={8}
+                              required
+                              autoComplete={
+                                authMode === "login"
+                                  ? "current-password"
+                                  : "new-password"
+                              }
+                            />
+                          </label>
+                          <button className="gold-button full" type="submit">
+                            {authMode === "login" ? "КІРУ" : "ТІРКЕЛУ"}
+                          </button>
+                        </form>
+                        <button
+                          className="text-button"
+                          onClick={() => {
+                            setAuthMode(
+                              authMode === "login" ? "signup" : "login",
+                            );
+                            setAuthMessage("");
+                          }}
+                        >
+                          {authMode === "login"
+                            ? "Жаңа аккаунт жасау"
+                            : "Аккаунтым бар"}
+                        </button>
+                        <button
+                          className="text-button"
+                          onClick={() => {
+                            setModal(null);
+                            start();
+                          }}
+                        >
+                          Қонақ ретінде ойнау <ArrowRight size={16} />
+                        </button>
+                        <p role="status" className="muted">
+                          {authMessage}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                )}
+              </Overlay>
+            )}
+          </AnimatePresence>
+          {toast && (
+            <motion.div
+              className="toast"
+              role="status"
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+            >
+              <Sparkles size={18} />
+              {toast}
+              <button
+                onClick={() => setToast("")}
+                aria-label="Хабарламаны жабу"
+              >
+                <X size={16} />
+              </button>
+            </motion.div>
           )}
-        </AnimatePresence>
-        {toast && (
-          <motion.div
-            className="toast"
-            role="status"
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-          >
-            <Sparkles size={18} />
-            {toast}
-            <button onClick={() => setToast("")} aria-label="Хабарламаны жабу">
-              <X size={16} />
-            </button>
-          </motion.div>
-        )}
-      </div>
-    </MotionConfig>
+        </div>
+      </MotionConfig>
+    </GameCharacterContext.Provider>
   );
 }
 function Overlay({
