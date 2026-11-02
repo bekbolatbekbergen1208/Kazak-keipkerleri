@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { HorseRider, GameProgress } from "../GameArt";
+import { HorseRider, GameProgress, SteppeScenery } from "../GameArt";
 import { RotateCcw, Trophy } from "lucide-react";
 export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
   const [running, setRunning] = useState(false);
@@ -82,13 +82,13 @@ export default function TengeIlu({ onComplete }: { onComplete: () => void }) {
         жеңілдетілген цифрлық нұсқасы.
       </p>
       <GameProgress value={score} total={5} label="Жиналған теңге" />
-      <div className="tenge-field">
+      <div className={`tenge-field ${running && score < 5 ? "arena-running" : ""}`}><SteppeScenery /><span className="stage-tag">КЕРҚҰЛАНЫҢ САПАРЫ</span>
         <span className="arena-sun" aria-hidden="true" />
         <span className="arena-mountains" aria-hidden="true" />
         <span className={`tenge-rider ${lean ? "lean" : ""}`}>
           <HorseRider />
         </span>
-        <span className="pickup-zone" />
+        <span className={`pickup-zone ${running && phase >= 38 && phase <= 48 ? "in-range" : ""}`} />
         <span
           className="tenge-token"
           style={{

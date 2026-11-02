@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { HorseRider, GameProgress, GameCharacter } from "./GameArt";
+import { HorseRider, SteppeScenery, GameProgress, GameCharacter } from "./GameArt";
 import { Brain, Check, Compass, RotateCcw } from "lucide-react";
 import { riddles } from "@/data/content";
 import type { GameKind } from "@/types/game";
@@ -257,7 +257,7 @@ function HorseRun({ onComplete }: { onComplete: () => void }) {
       <h2>Дала желімен жарыс!</h2>
       <p>5 кедергіден секір. Бос орын, ↑ немесе «СЕКІРУ» батырмасын бас.</p>
       <GameProgress value={score} total={5} label="Өткен кедергі" />
-      <div className="horse-scene">
+      <div className={`horse-scene ${running ? "arena-running" : ""}`}><SteppeScenery /><span className="stage-tag">ДАЛА ЖЕЛІ</span>
         <span className="arena-sun" aria-hidden="true" />
         <span className="arena-mountains" aria-hidden="true" />
         <div className={`rider ${jump ? "jump" : ""}`}>

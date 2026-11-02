@@ -1,3 +1,5 @@
+import type { TostikProgress } from "@/data/tostik";
+import type { AdventureProgress } from "@/data/adventure";
 import type { LearningProgress } from "@/data/learning";
 export type Stats = {
   strength: number;
@@ -45,6 +47,8 @@ export type Player = {
   completed: string[];
   nationalCompleted: string[];
   learning: LearningProgress;
+  adventure: AdventureProgress;
+  tostik: TostikProgress;
   missionProgress: Record<string, number>;
   unlocked: string[];
   achievements: string[];

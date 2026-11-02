@@ -2,6 +2,7 @@
 import { nationalGames, type NationalKind } from "@/data/national-games";
 import { ArrowUpRight, Check, Coins, Zap } from "lucide-react";
 import { GameCover } from "../GameArt";
+import GameLearning from "./GameLearning";
 import AsykAtu from "./AsykAtu";
 import ArqanTartys from "./ArqanTartys";
 import TengeIlu from "./TengeIlu";
@@ -70,11 +71,11 @@ export default function NationalGame({
   kind: NationalKind;
   onComplete: () => void;
 }) {
-  return kind === "asyk" ? (
+  return <><a className="learning-jump" href="#game-learning">Ойын + 3 білім тапсырмасы · Ойнап үйрен ↓</a>{kind === "asyk" ? (
     <AsykAtu onComplete={onComplete} />
   ) : kind === "arqan" ? (
     <ArqanTartys onComplete={onComplete} />
   ) : (
     <TengeIlu onComplete={onComplete} />
-  );
+  )}<GameLearning key={kind} kind={kind}/></>;
 }

@@ -1,0 +1,260 @@
+{
+  "language": "kk-KZ",
+  "voice": "kk-KZ-DauletNeural",
+  "rate": "-8%",
+  "format": "audio/mp4",
+  "clips": [
+    {
+      "episode": "birth",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/birth-1.m4a",
+      "duration": 4.631995,
+      "hash": "82e7a288d2279aae6d7dfdddd70f10f54b13722d26f5b411255bc189e5a3c1ec"
+    },
+    {
+      "episode": "birth",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/birth-2.m4a",
+      "duration": 5.351995,
+      "hash": "d5c204aa2933b7ffdcda8a8d18a0db0ba63bed2743f044962fa15458a60816ab"
+    },
+    {
+      "episode": "brothers",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/brothers-1.m4a",
+      "duration": 4.223991,
+      "hash": "0901d6f47f92214fded831c55e622f93da1b7feefefa17a357585db22c5a25e5"
+    },
+    {
+      "episode": "brothers",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/brothers-2.m4a",
+      "duration": 5.663991,
+      "hash": "052b003d683cea6c757bdd2f7b89bb40f8a723353a86702b282236b5b74a7ffb"
+    },
+    {
+      "episode": "kenzhekei",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/kenzhekei-1.m4a",
+      "duration": 5.831995,
+      "hash": "85b62132abba6145b11275f99cd6fc0f75005ea20d59bbc3f601ca2a13fb7a22"
+    },
+    {
+      "episode": "kenzhekei",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/kenzhekei-2.m4a",
+      "duration": 6.167982,
+      "hash": "12bef4f96bce68fe7e1d1f8550bbf840851acdfe9d2b183d24fa1aee09657f32"
+    },
+    {
+      "episode": "sorqudyq",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/sorqudyq-1.m4a",
+      "duration": 5.543991,
+      "hash": "7919649b690f370065a152545c155555e7f894ae6fd2ced2c3f60c607ce4b846"
+    },
+    {
+      "episode": "sorqudyq",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/sorqudyq-2.m4a",
+      "duration": 5.231995,
+      "hash": "1eb952a7a443ee26668133402096d66e7d7d6663e415424e597197181ce3f1fd"
+    },
+    {
+      "episode": "underground",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/underground-1.m4a",
+      "duration": 5.327982,
+      "hash": "b8630dccceea80a39934df918e99d51163299be3786441a0e899b209d86716e6"
+    },
+    {
+      "episode": "underground",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/underground-2.m4a",
+      "duration": 5.52,
+      "hash": "9724cdb28abb47c2299e6dcde698b0da187e09656d86cc696ba8301d7c27d577"
+    },
+    {
+      "episode": "bapy",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/bapy-1.m4a",
+      "duration": 5.111995,
+      "hash": "c62661ba65d745794c6c6b8083f553ef60b9f446071a3628749b7239c4b17ff4"
+    },
+    {
+      "episode": "bapy",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/bapy-2.m4a",
+      "duration": 5.543991,
+      "hash": "f9294d6a4848980a852f419880490ac4e9b71cb7e63e328d6fb6d73707c79928"
+    },
+    {
+      "episode": "companions",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/companions-1.m4a",
+      "duration": 5.831995,
+      "hash": "55c684e3dd36f4bcf9b26e3a6086891b75ad3c84b423c892d09480b6f72d6b65"
+    },
+    {
+      "episode": "companions",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/companions-2.m4a",
+      "duration": 5.4,
+      "hash": "6f703aa8b654e125412e3c30d2ec697691f9ddc9ce577f2ba27f88b8e85b98a3"
+    },
+    {
+      "episode": "hidden-palace",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/hidden-palace-1.m4a",
+      "duration": 6.095986,
+      "hash": "cf5db84fb60d208f10945e8f721b75289cb1751ecde20f8a534372efa2abdffc"
+    },
+    {
+      "episode": "hidden-palace",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/hidden-palace-2.m4a",
+      "duration": 6.791995,
+      "hash": "96ee7e8120a63d1b439381eb096d83c3aea64468e7f9f9da76e532faa7575ba4"
+    },
+    {
+      "episode": "warning",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/warning-1.m4a",
+      "duration": 6.095986,
+      "hash": "4b8e858cbe6b23e9282dc8686da5c2e9122c40e0e47ecb30f75f776ef8f4b556"
+    },
+    {
+      "episode": "warning",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/warning-2.m4a",
+      "duration": 6.167982,
+      "hash": "b02ee978fd16902f78379223c7c1c7d9259be6bf98e89b56a8b14d143d566422"
+    },
+    {
+      "episode": "contests",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/contests-1.m4a",
+      "duration": 5.567982,
+      "hash": "54518063e763c27cd8f2298d12f2cd220b5ec4b0cb6b4af9bcb51944a27d2acb"
+    },
+    {
+      "episode": "contests",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/contests-2.m4a",
+      "duration": 4.775986,
+      "hash": "e0897ece7b4f812f04eac5e1f5f7bc54da32f85c3e9699912b2621106e77a6d7"
+    },
+    {
+      "episode": "cauldron",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/cauldron-1.m4a",
+      "duration": 6.623991,
+      "hash": "0a5a9be5b928e8f3a71f723eab35454492c313961bd5748c9232603f7a272c0a"
+    },
+    {
+      "episode": "cauldron",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/cauldron-2.m4a",
+      "duration": 5.927982,
+      "hash": "9e5da16a56a17166f78c78c91ab016cd431054ec7dba4919e68fe065bbc4a450"
+    },
+    {
+      "episode": "iron-palace",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/iron-palace-1.m4a",
+      "duration": 4.655986,
+      "hash": "635524008a639bedf80eb3585d6a9083038117a17229194b735c2f012ecf1768"
+    },
+    {
+      "episode": "iron-palace",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/iron-palace-2.m4a",
+      "duration": 7.103991,
+      "hash": "c57875e17adb5efaf31cb0414e97954b92f7e040108ea6fd53fa1bdef052c0c3"
+    },
+    {
+      "episode": "farewell",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/farewell-1.m4a",
+      "duration": 5.231995,
+      "hash": "e4d500c1c90aea5f3e18b9ec86b1fce111b9db63f46f4810e3653815df266d0c"
+    },
+    {
+      "episode": "farewell",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/farewell-2.m4a",
+      "duration": 6.863991,
+      "hash": "574e91ddf3835f9eec418bc790224feed9fa54150a86708e068e2f8fb3d94501"
+    },
+    {
+      "episode": "nest",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/nest-1.m4a",
+      "duration": 4.56,
+      "hash": "5a81157cc0937ee6c4dc404d660c021ec673482abcb59eb5ed3cafcbf5055f72"
+    },
+    {
+      "episode": "nest",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/nest-2.m4a",
+      "duration": 6.167982,
+      "hash": "e4e0c6c2114ac47058c198f303dac63aa88158380f1a8362070d294f87186bd7"
+    },
+    {
+      "episode": "samruk",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/samruk-1.m4a",
+      "duration": 4.44,
+      "hash": "ed078a2d24903d1fac8e23130de44fac6d93bafd3a96cae59130f7f4981c8da3"
+    },
+    {
+      "episode": "samruk",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/samruk-2.m4a",
+      "duration": 4.031995,
+      "hash": "7542c42563b7d3f9ca88405e3bcb9a9ddd24f9d1d821651e7d941430ec7b3ea9"
+    },
+    {
+      "episode": "captivity",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/captivity-1.m4a",
+      "duration": 6.455986,
+      "hash": "4466ff720fb818a4938ad3c420071504879c7c5b71ab34ba3302ec4ac34f766d"
+    },
+    {
+      "episode": "captivity",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/captivity-2.m4a",
+      "duration": 4.943991,
+      "hash": "bec6f718f63f4f0c8e902a7008abf1162caa9febeba47b77ed02b8eef8242528"
+    },
+    {
+      "episode": "shoyinqulaq",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/shoyinqulaq-1.m4a",
+      "duration": 4.727982,
+      "hash": "e96ee6f3817cef5e2e27126085053d290ffdd5126dac610c4d9ba737b6623753"
+    },
+    {
+      "episode": "shoyinqulaq",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/shoyinqulaq-2.m4a",
+      "duration": 5.231995,
+      "hash": "e93bcb0c667c21308e173e2688530a958a107bf24f7ff6eec2dab9fadb2d5127"
+    },
+    {
+      "episode": "return",
+      "frame": 0,
+      "src": "/audio/tostik-daulet/return-1.m4a",
+      "duration": 5.64,
+      "hash": "bdc15ca7ed2c14242f3809721722757433443c3a5156d33f9d9fb557632b30bc"
+    },
+    {
+      "episode": "return",
+      "frame": 1,
+      "src": "/audio/tostik-daulet/return-2.m4a",
+      "duration": 6.863991,
+      "hash": "2bcf0ce677409f78800646941e1d7ca48abc0dde36e9c17288bafa8b40b4ecae"
+    }
+  ]
+}

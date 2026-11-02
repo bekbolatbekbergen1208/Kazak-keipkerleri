@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { PullTeam } from "../GameArt";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { PullTeam, SteppeScenery } from "../GameArt";
 import { RotateCcw, Trophy } from "lucide-react";
 
 type Side = "left" | "right";
@@ -71,19 +71,19 @@ export default function ArqanTartys({
         кезекпен бас. Белгіні оң жақтағы өз мәре сызығыңа жеткіз. Бұл — арқан
         тартыстың жеңілдетілген цифрлық нұсқасы.
       </p>
-      <div className="arqan-field">
+      <div className={`arqan-field ${running && !won && !lost ? "arena-running" : ""}`}><SteppeScenery />
         <div className="arqan-teams">
           <span>Қарсылас</span>
           <strong>Сенің тобың</strong>
         </div>
-        <div className="arqan-track">
+        <div className="arqan-track" style={{ "--tug-offset": `${(power - 50) * .38}px` } as CSSProperties}>
           <span className="pull-team pull-team-left">
             <PullTeam />
           </span>
           <span className="pull-team pull-team-right">
             <PullTeam reverse />
           </span>
-          <span className="arqan-rope" />
+          <span className="arqan-rope" /><span className="tug-ground-line" aria-hidden="true" />
           <span className="arqan-center" />
           <span
             className="arqan-marker"

@@ -1,0 +1,267 @@
+{
+  "language": "kk-KZ",
+  "voice": "kk-KZ-DauletNeural",
+  "rate": "-8%",
+  "format": "audio/mp4",
+  "clips": [
+    {
+      "episode": "section-001",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-001-1.m4a",
+      "duration": 89.28,
+      "hash": "35c86d6ad968553ab3899d701ae6cc1fd635aa0b236cc71d0d1a6eaa8f7d9743"
+    },
+    {
+      "episode": "section-002",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-002-1.m4a",
+      "duration": 91.871995,
+      "hash": "96aa8839b89e6c747b3101eb438fee7b499272cdf910e243d1ff0cbf07817282"
+    },
+    {
+      "episode": "section-003",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-003-1.m4a",
+      "duration": 97.583991,
+      "hash": "d5dd47753425bc748afa9c5befc410e70f2099e3b7ee07cb355fe8598b9ab160"
+    },
+    {
+      "episode": "section-004",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-004-1.m4a",
+      "duration": 94.967982,
+      "hash": "37421964d2ede4eee650942bf34c7f86fdb190c9761f4e41c25db863103cfff4"
+    },
+    {
+      "episode": "section-005",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-005-1.m4a",
+      "duration": 98.063991,
+      "hash": "cf2b939f9844a0198256aa8e38ac0d54f0dfc811d0fa554f5552b8c52e1254bb"
+    },
+    {
+      "episode": "section-006",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-006-1.m4a",
+      "duration": 93.36,
+      "hash": "cbf21af99c7ca0817e03c62ce0b215a57f5b6558bc0f05163f3facf248995759"
+    },
+    {
+      "episode": "section-007",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-007-1.m4a",
+      "duration": 90.671995,
+      "hash": "8cab7b6fc66b8e0c44610abda37f9cdce513b2883d0cda811783e2fb53a11cea"
+    },
+    {
+      "episode": "section-008",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-008-1.m4a",
+      "duration": 75.36,
+      "hash": "c4fe6fc49d562d84f3686377fb071cad59e0878266533c84b441e7527d33bb2a"
+    },
+    {
+      "episode": "section-009",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-009-1.m4a",
+      "duration": 106.223991,
+      "hash": "ff4c6959d44a4c90f5fccc5ee5f4fa1bbd02fc1f968333a614ebc7426d6343d9"
+    },
+    {
+      "episode": "section-010",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-010-1.m4a",
+      "duration": 103.08,
+      "hash": "7969ff16de7b359595a6be2afd43b1f1ca13c8a5ddae8d0a80239402d112490b"
+    },
+    {
+      "episode": "section-011",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-011-1.m4a",
+      "duration": 7.391995,
+      "hash": "9374670fc89fb776ef46bf21ee4593443f373213d10555900569b6ffae81810e"
+    },
+    {
+      "episode": "section-012",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-012-1.m4a",
+      "duration": 95.207982,
+      "hash": "ae711c357d92315cc1a4bb70ce67ba92f624d03bdb6599358f248b854484983d"
+    },
+    {
+      "episode": "section-013",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-013-1.m4a",
+      "duration": 46.271995,
+      "hash": "6e76c44705dca925526d851cb89d19774be1a6cd42b41c62718573aa9afe0e9f"
+    },
+    {
+      "episode": "section-014",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-014-1.m4a",
+      "duration": 98.04,
+      "hash": "435ef8aa720c8e33f643d5fa31873f3f44af2f8ec8dcf491ded050de459a07d8"
+    },
+    {
+      "episode": "section-015",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-015-1.m4a",
+      "duration": 71.903991,
+      "hash": "080e5baf083511544b6f7b5ab067cb5f6afcf4534539b4d6208aa84f4d646bd6"
+    },
+    {
+      "episode": "section-016",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-016-1.m4a",
+      "duration": 83.183991,
+      "hash": "3210788d5fe34a4229fc969e71905a36a3860b186f6d673ef875b0ce184bd435"
+    },
+    {
+      "episode": "section-017",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-017-1.m4a",
+      "duration": 78.215986,
+      "hash": "55133ea5a916e188850b4f4e0e2d1ec9002f9e952a42c774d29e6ec0110ac620"
+    },
+    {
+      "episode": "section-018",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-018-1.m4a",
+      "duration": 90.527982,
+      "hash": "4671c84e94d8bf60cb0f78c1cc53a635d8d4bd82f49523c45d74d842f45ee536"
+    },
+    {
+      "episode": "section-019",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-019-1.m4a",
+      "duration": 91.055986,
+      "hash": "85b408862f64b97a64dc9e4440c990dfbf142b6f4b4c3d0ebfe525bd15282966"
+    },
+    {
+      "episode": "section-020",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-020-1.m4a",
+      "duration": 86.711995,
+      "hash": "9944395e8c59b53cad9a9cb4f2165c6a33418a1040be088e0e63c18deff2b331"
+    },
+    {
+      "episode": "section-021",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-021-1.m4a",
+      "duration": 91.08,
+      "hash": "b650f54a4ebd6a893fb45db0da832ab2a2c677c31de17d36287fd2780476510d"
+    },
+    {
+      "episode": "section-022",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-022-1.m4a",
+      "duration": 99.503991,
+      "hash": "c31733f0a55c4ef96f36a4e2de38140381d80b6e0b43c099c08d420f59d25bc3"
+    },
+    {
+      "episode": "section-023",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-023-1.m4a",
+      "duration": 96.96,
+      "hash": "e4fa2313f9610f3bb3e8cdfb80d9534412e0cf88a10bdb97433689c53b214bd0"
+    },
+    {
+      "episode": "section-024",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-024-1.m4a",
+      "duration": 82.103991,
+      "hash": "34a51a67d773b50697e29f03d0e57c38ee747e3bebd65d2832d69411e510c3d1"
+    },
+    {
+      "episode": "section-025",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-025-1.m4a",
+      "duration": 85.583991,
+      "hash": "6d56d9180eaa0f9ce01f3ada27d7d825f2222ef06b5c364a405c33fc9cc2b469"
+    },
+    {
+      "episode": "section-026",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-026-1.m4a",
+      "duration": 54.911995,
+      "hash": "d92d1c5db846381ceb56993ee147be4a0e1f5060e06c564289e769d86aea9a8e"
+    },
+    {
+      "episode": "section-027",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-027-1.m4a",
+      "duration": 66.48,
+      "hash": "22c01411f9594d998d2c53b4ad30d63abc534cf17f480cff38d16235231af5ec"
+    },
+    {
+      "episode": "section-028",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-028-1.m4a",
+      "duration": 86.375986,
+      "hash": "8e9fc8ce3cb108e1876191c72d8938e56364053c2a84f81f10ec4d3bc716f568"
+    },
+    {
+      "episode": "section-029",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-029-1.m4a",
+      "duration": 40.68,
+      "hash": "05722d2763c7be30c241b21b10b1e8736423e2f41479125df3ea56d66513c1fd"
+    },
+    {
+      "episode": "section-030",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-030-1.m4a",
+      "duration": 83.831995,
+      "hash": "946f6bf147f2be00a3d2f6a7fc35369f4f9edfff0cff7e7fa33ccf66770c036b"
+    },
+    {
+      "episode": "section-031",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-031-1.m4a",
+      "duration": 46.463991,
+      "hash": "fc71146c6e870944691bf47599581cf9df65be946176d3db97b0d4e8cfff01ed"
+    },
+    {
+      "episode": "section-032",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-032-1.m4a",
+      "duration": 85.367982,
+      "hash": "3a8643a5321c94cae9ef61465446745159929c55a87850a720bb92fd033a243e"
+    },
+    {
+      "episode": "section-033",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-033-1.m4a",
+      "duration": 50.231995,
+      "hash": "049d4a5eae7ddeb17169ca45edbd797fa39e32b2522cdf756c82f5d3475a2234"
+    },
+    {
+      "episode": "section-034",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-034-1.m4a",
+      "duration": 90.911995,
+      "hash": "ce1dc873c0eb8b03da5fe36d084985b7185914cd5097d2a272de71eca1971ca9"
+    },
+    {
+      "episode": "section-035",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-035-1.m4a",
+      "duration": 91.703991,
+      "hash": "c191c34a11662edc4934cb7bc7cde59a5468e6eb005fc5a2896bc7792951432e"
+    },
+    {
+      "episode": "section-036",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-036-1.m4a",
+      "duration": 94.68,
+      "hash": "54f37845c78fb031a65eade6f9ddb270aadb6fc7ee7f00f6b39f92e62b73f6c9"
+    },
+    {
+      "episode": "section-037",
+      "frame": 0,
+      "src": "/audio/tostik-full-daulet/section-037-1.m4a",
+      "duration": 37.151995,
+      "hash": "236e124c71d7e87dfe45c5863cb9623f335fe6589537b2b3fe602be378f05c1e"
+    }
+  ]
+}

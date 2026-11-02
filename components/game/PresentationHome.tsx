@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import { NationalGamesShelf } from "./national/NationalGames";
 import type { NationalKind } from "@/data/national-games";
+import StoryPortal from "./StoryPortal";
+import RequiredLearningHub from "./RequiredLearningHub";
 import { LearningPreview } from "./LearningClub";
 import ProductArtwork from "./ProductArtwork";
 import HeroArtwork from "@/components/heroes/HeroArtwork";
@@ -48,6 +50,9 @@ export default function PresentationHome({
   onAcademy,
   badgeCount,
   onPickCharacter,
+  onAdventure,
+  onLibrary,
+  storyCompleted,
 }: {
   started: boolean;
   ready: boolean;
@@ -59,6 +64,9 @@ export default function PresentationHome({
   onAcademy: () => void;
   badgeCount: number;
   onPickCharacter: () => void;
+  onAdventure: () => void;
+  onLibrary: () => void;
+  storyCompleted: number;
 }) {
   const [selectedProduct, setSelectedProduct] = useState<
     (typeof products)[number] | null
@@ -153,6 +161,14 @@ export default function PresentationHome({
         <span>ҚҰРМЕТ</span>
         <span>АДАЛДЫҚ</span>
       </div>
+      <StoryPortal
+        completed={storyCompleted}
+        onAdventure={onAdventure}
+        onLibrary={onLibrary}
+      />
+      <section className="reference-section">
+        <RequiredLearningHub />
+      </section>
       <LearningPreview onOpen={onAcademy} count={badgeCount} />
       <section className="home-national-games" id="games">
         <NationalGamesShelf

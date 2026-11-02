@@ -1,0 +1,30 @@
+import { test, expect } from "@playwright/test";
+test("game tasks explain mistakes and teach three skills", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("header nav").getByRole("button", {name:"ОЙЫНДАР",exact:true}).click();
+  await page.locator(".national-card").filter({hasText:"Асық ату"}).click();
+  await page.locator(".learning-jump").click();
+  const lesson = page.getByRole("region", { name:"Ойнап үйрен" });
+  await lesson.getByRole("button", {name:"A 2 асық",exact:true}).click();
+  await expect(lesson.getByRole("status")).toContainText("Тағы ойланып көр");
+  await lesson.getByRole("button", {name:"B 3 асық",exact:true}).click();
+  await expect(lesson.getByRole("status")).toContainText("5 − 2 = 3");
+  await lesson.getByRole("button", {name:"Келесі тапсырма"}).click();
+  await lesson.getByRole("button", {name:"A 2 асық",exact:true}).click();
+  await lesson.getByRole("button", {name:"Келесі тапсырма"}).click();
+  await lesson.getByRole("button", {name:"C Сол жаққа",exact:true}).click();
+  await expect(lesson).toContainText("Үш тапсырманы да орындадың");
+});
+test("story has episode questions, readable text and a full original link on mobile", async ({ page }) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/ertostik");
+  const lesson = page.getByRole("region", {name:"Сюжетті түсіну сұрақтары"});
+  await lesson.getByRole("button", {name:"A Ата-анасына",exact:true}).click();
+  await expect(lesson.getByRole("status")).toContainText("Дұрыс!");
+  await expect(lesson.locator(".learning-heading")).toContainText("1 / 18");
+  await expect(lesson.getByRole("link",{name:"Ертегінің түпнұсқа толық мәтіні"})).toHaveAttribute("href",/pushkinlibrary/);
+  await lesson.getByRole("button",{name:"Барлық сюжетті оқу"}).click();
+  await expect(page.locator(".cinema-transcript")).toHaveAttribute("open","");
+  await expect(page.locator(".cinema-transcript article")).toHaveCount(18);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});

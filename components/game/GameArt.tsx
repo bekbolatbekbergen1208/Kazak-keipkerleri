@@ -47,7 +47,21 @@ export function GameCharacter({ opponent = false }: { opponent?: boolean }) {
   );
 }
 export function HorseRider() {
-  return <GameCharacter />;
+  return <span className="mounted-hero">
+    <svg className="steppe-horse" viewBox="0 0 240 170" aria-hidden="true">
+      <ellipse cx="119" cy="153" rx="83" ry="9" fill="#342f3d" opacity=".16"/>
+      <path d="M53 70Q26 61 21 91Q14 113 7 106Q25 129 38 101L65 93" fill="#382735"/>
+      <path d="M63 108L53 150H68L87 107M139 108L164 150H180L158 96" fill="#794639" stroke="#503135" strokeWidth="5" strokeLinejoin="round"/>
+      <path d="M56 77Q75 57 127 72L154 47L166 19L179 36L192 42L211 69Q210 80 196 79L178 70L165 99Q151 121 111 119L70 113Q47 107 56 77Z" fill="#bb7651" stroke="#503135" strokeWidth="4"/>
+      <path d="M89 113L81 151H98L112 115M146 107L133 149H149L168 103" fill="#d49162" stroke="#503135" strokeWidth="4"/>
+      <path d="M151 49L166 19L172 39L161 72L148 83" fill="#382735"/>
+      <path d="M87 74Q113 67 135 77L128 100L89 97Z" fill="#307f80" stroke="#e6c780" strokeWidth="4"/>
+      <path d="M93 82L121 89M105 77L108 96" stroke="#ffda8b" strokeWidth="3"/>
+      <path d="M177 58L196 69L202 66M177 58L137 82" fill="none" stroke="#ead2a0" strokeWidth="3"/>
+      <circle cx="187" cy="53" r="3" fill="#251f30"/>
+    </svg>
+    <span className="mounted-character"><GameCharacter /></span>
+  </span>;
 }
 export function PullTeam({ reverse = false }: { reverse?: boolean }) {
   return <GameCharacter opponent={!reverse} />;
@@ -118,4 +132,19 @@ export function GameProgress({
       </strong>
     </div>
   );
+}
+
+export function SteppeScenery() {
+  return <svg className="steppe-scenery" viewBox="0 0 1000 400" preserveAspectRatio="none" aria-hidden="true">
+    <circle cx="804" cy="78" r="40" fill="#ffe9a6"/><circle cx="804" cy="78" r="57" fill="#fff3c2" opacity=".25"/>
+    <g fill="#fff" opacity=".65"><path d="M89 65h104q10-17-12-20q-18-28-42-5q-27-8-30 13q-20-1-20 12"/><path d="M510 91h113q8-14-15-18q-16-24-43-4q-29-8-33 13q-22-2-22 9"/></g>
+    <path d="M0 245L129 115L219 212L369 79L528 237L678 140L817 235L936 125L1000 210V400H0Z" fill="#87b4bb"/>
+    <path d="M300 145L369 79L442 152L396 136L369 112L346 144L327 132Z M78 167L129 115L175 165L137 144L121 151L109 143Z" fill="#e6f1ed"/>
+    <path d="M0 248Q173 174 340 254T673 239T1000 244V400H0Z" fill="#77a695"/>
+    <path d="M0 292Q190 225 414 285T1000 267V400H0Z" fill="#a0bb83"/>
+    <path d="M0 337Q390 307 1000 331V400H0Z" fill="#dfbd87"/>
+    <path d="M0 360Q430 333 1000 359" fill="none" stroke="#efd4a5" strokeWidth="9"/>
+    <g fill="#5b8b78"><path d="M35 314l-8-23 15 16 7-28 5 35ZM916 315l-7-24 14 15 5-25 6 34ZM624 317l-8-18 10 7 7-20 3 31Z"/></g>
+    <g stroke="#f2d696" strokeWidth="3"><path d="M204 350h32M470 376h49M781 343h35M86 386h52M899 382h44"/></g>
+  </svg>;
 }

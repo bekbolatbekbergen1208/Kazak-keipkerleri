@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import {
+  BookOpen,
   ArrowRight,
   ArrowUpRight,
   Check,
@@ -25,8 +26,16 @@ import {
   X,
   Zap,
 } from "lucide-react";
+import StoryAdventure from "./StoryAdventure";
+import FairyLibrary from "./FairyLibrary";
+import QuestGame from "./QuestGame";
+import { questGames, type QuestGameKind } from "@/data/adventure";
+import { completeTostikEpisode } from "@/lib/tostik";
+import { tostikEpisodes } from "@/data/tostik";
+import { finishTale } from "@/lib/adventure";
 import { GameCharacterContext } from "./GameArt";
 import CharacterPicker from "@/components/heroes/CharacterPicker";
+import RequiredLearningHub from "./RequiredLearningHub";
 import LearningClub from "./LearningClub";
 import { completeLearning } from "@/lib/learning";
 import { today } from "@/lib/progression";
@@ -58,6 +67,8 @@ import { supabase } from "@/lib/supabase";
 import { playEffect, type SoundSettings } from "@/lib/sound";
 import type { GameKind, Hero, Mission, Player } from "@/types/game";
 type Screen =
+  | "adventure"
+  | "library"
   | "learning"
   | "games"
   | "home"
@@ -84,8 +95,10 @@ const intro = [
   "Сол күшті қайта оятатын жаңа қаһарман керек.",
   "Ол қаһарман — сен.",
 ];
-export default function Game() {
-  const [screen, setScreen] = useState<Screen>("home");
+export default function Game({
+  initialScreen = "home",
+}: { initialScreen?: Screen } = {}) {
+  const [screen, setScreen] = useState<Screen>(initialScreen);
   const [player, setPlayer] = useState<Player>(freshPlayer);
   const [loaded, setLoaded] = useState(false);
   const [started, setStarted] = useState(false);
@@ -99,6 +112,7 @@ export default function Game() {
   const [introStep, setIntroStep] = useState(0);
   const [pickingCharacter, setPickingCharacter] = useState(false);
   const [national, setNational] = useState<NationalKind | null>(null);
+  const [questGame, setQuestGame] = useState<QuestGameKind | null>(null);
   const [practice, setPractice] = useState<GameKind | null>(null);
   const [tab, setTab] = useState("Барлық уақыт");
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
@@ -366,6 +380,24 @@ export default function Game() {
               </button>
             </div>
           </header>
+          <div className="story-quicknav">
+            <button
+              disabled={!loaded}
+              onClick={() => {
+                setStarted(true);
+                navigate("adventure");
+              }}
+            >
+              СЮЖЕТ <Compass size={16} />
+            </button>
+            <button disabled={!loaded} onClick={() => navigate("library")}>
+              ЕРТЕГІЛЕР <BookOpen size={16} />
+            </button>
+            <span>
+              {player.tostik.seen.length} / {tostikEpisodes.length} эпизод ·{" "}
+              {player.adventure.readTales.length} ертегі оқылды
+            </span>
+          </div>
           <main>
             <motion.div
               key={screen}
@@ -386,20 +418,76 @@ export default function Game() {
                   onAcademy={() => navigate("learning")}
                   badgeCount={player.learning?.completed.length ?? 0}
                   onPickCharacter={() => setPickingCharacter(true)}
+                  onAdventure={() => {
+                    setStarted(true);
+                    navigate("adventure");
+                  }}
+                  onLibrary={() => navigate("library")}
+                  storyCompleted={player.tostik.seen.length}
+                />
+              )}
+              {screen === "adventure" && loaded && (
+                <StoryAdventure
+                  progress={player.tostik}
+                  onCheckpoint={(episode, frame) => {
+                    setStarted(true);
+                    update((p) => ({
+                      ...p,
+                      tostik: { ...p.tostik, episode, frame },
+                    }));
+                  }}
+                  onEpisodeComplete={(id) => {
+                    setStarted(true);
+                    update((p) => completeTostikEpisode(p, id));
+                  }}
+                  onLibrary={() => navigate("library")}
+                />
+              )}
+              {screen === "library" && (
+                <FairyLibrary
+                  progress={player.adventure}
+                  onRead={(id) => {
+                    setStarted(true);
+                    update((p) => finishTale(p, id));
+                    setToast(
+                      "Ертегі оқылды! Оқылған кітаптар жинағыңда сақталды.",
+                    );
+                  }}
+                  onFavorite={(id) => {
+                    setStarted(true);
+                    update((p) => ({
+                      ...p,
+                      adventure: {
+                        ...p.adventure,
+                        favorites: p.adventure.favorites.includes(id)
+                          ? p.adventure.favorites.filter((v) => v !== id)
+                          : [...p.adventure.favorites, id],
+                      },
+                    }));
+                  }}
+                  onAdventure={() => {
+                    setStarted(true);
+                    navigate("adventure");
+                  }}
                 />
               )}
               {screen === "learning" && (
-                <LearningClub
-                  date={today()}
-                  progress={
-                    player.learning ?? { completed: [], dailyDates: [] }
-                  }
-                  onComplete={(kind: LearningKind) => {
-                    setStarted(true);
-                    update((p) => completeLearning(p, kind, today()));
-                    playEffect(sound);
-                  }}
-                />
+                <>
+                  <div className="content-section">
+                    <RequiredLearningHub />
+                  </div>
+                  <LearningClub
+                    date={today()}
+                    progress={
+                      player.learning ?? { completed: [], dailyDates: [] }
+                    }
+                    onComplete={(kind: LearningKind) => {
+                      setStarted(true);
+                      update((p) => completeLearning(p, kind, today()));
+                      playEffect(sound);
+                    }}
+                  />
+                </>
               )}
               {screen === "games" && (
                 <section className="content-section games-hub">
@@ -438,6 +526,42 @@ export default function Game() {
                       <User size={18} />
                     </button>
                   </div>
+                  <RequiredLearningHub />
+                  <div className="quest-games-heading">
+                    <span className="eyebrow">
+                      БАЙҚА · ЕСТЕ САҚТА · ҚҰРАСТЫР
+                    </span>
+                    <h2>Ертегідегі жаңа ойындар</h2>
+                    <p>
+                      Алдымен жаттығып көр немесе осы ойындарды сюжет ішінде
+                      ойна.
+                    </p>
+                  </div>
+                  <div className="quest-game-shelf">
+                    {questGames.map((game) => (
+                      <button
+                        key={game.id}
+                        className="quest-game-card"
+                        onClick={() => setQuestGame(game.id)}
+                      >
+                        <span aria-hidden="true">{game.icon}</span>
+                        <h3>{game.title}</h3>
+                        <p>{game.description}</p>
+                        <strong>
+                          ОЙНАУ <ArrowRight size={17} />
+                        </strong>
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    className="outline-button"
+                    onClick={() => {
+                      setStarted(true);
+                      navigate("adventure");
+                    }}
+                  >
+                    ОЙЫНДАРДЫ СЮЖЕТПЕН ӨТУ <ArrowRight size={18} />
+                  </button>
                   <NationalGamesShelf
                     completed={player.nationalCompleted ?? []}
                     onSelect={openNational}
@@ -1217,6 +1341,19 @@ export default function Game() {
                     </button>
                   </div>
                 </div>
+              </Overlay>
+            )}
+            {questGame && (
+              <Overlay close={() => setQuestGame(null)}>
+                <QuestGame
+                  kind={questGame}
+                  onComplete={() => {
+                    setQuestGame(null);
+                    setToast(
+                      "Жаттығу аяқталды! Сюжетті өтіп, тарау сыйлықтарын жина.",
+                    );
+                  }}
+                />
               </Overlay>
             )}
             {national && (

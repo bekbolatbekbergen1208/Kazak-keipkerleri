@@ -57,7 +57,8 @@ export default function AsykAtu({ onComplete }: { onComplete: () => void }) {
         <span className="arena-caption" aria-hidden="true">
           АСЫҚ АЛАҢЫ
         </span>
-        <div className="asyk-ring" />
+        <div className="asyk-ring" /><span className="sand-ornament ornament-left" aria-hidden="true">✦</span><span className="sand-ornament ornament-right" aria-hidden="true">✦</span>
+        <svg className="aim-trajectory" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d={`M50 85 Q${aim} 70 ${aim} ${85 - force * .65}`} /></svg>
         <span className="asyk-player">
           <GameCharacter />
         </span>
@@ -72,7 +73,7 @@ export default function AsykAtu({ onComplete }: { onComplete: () => void }) {
               setMessage(`${i + 1}-асық көзделді. Енді сақаны ат!`);
             }}
             key={i}
-            className={`asyk-bone ${hits.includes(i) ? "hit" : ""}`}
+            className={`asyk-bone bone-color-${i} ${Math.abs(aim - t.x) < 2 && Math.abs(85 - force * .65 - t.y) < 2 ? "targeted" : ""} ${hits.includes(i) ? "hit" : ""}`}
             style={{ left: `${t.x}%`, top: `${t.y}%` }}
           >
             <AsykShape />

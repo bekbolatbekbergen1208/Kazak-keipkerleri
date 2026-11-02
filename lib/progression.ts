@@ -1,3 +1,6 @@
+import { tostikEpisodes } from "@/data/tostik";
+import { chapters } from "@/data/adventure";
+import { tales } from "@/data/tales";
 import { heroes } from "@/data/content";
 import type { Player } from "@/types/game";
 export const today = () =>
@@ -20,6 +23,8 @@ export const freshPlayer = (): Player => ({
   completed: [],
   nationalCompleted: [],
   learning: { completed: [], dailyDates: [] },
+  adventure: { completed: [], readTales: [], favorites: [] },
+  tostik: { seen: [], episode: 0, frame: 0 },
   missionProgress: {},
   unlocked: ["tostik"],
   achievements: [],
@@ -35,6 +40,15 @@ export function levelFor(xp: number) {
 }
 export function reconcile(p: Player): Player {
   const unlocked = heroes.filter((h) => p.xp >= h.threshold).map((h) => h.id);
+  const filmEpisode = Number.isInteger(p.tostik?.episode)
+    ? Math.max(0, Math.min(tostikEpisodes.length - 1, p.tostik.episode))
+    : 0;
+  const filmFrame = Number.isInteger(p.tostik?.frame)
+    ? Math.max(
+        0,
+        Math.min(tostikEpisodes[filmEpisode].frames.length - 1, p.tostik.frame),
+      )
+    : 0;
   const a = new Set(p.achievements);
   if (p.completed.length) a.add("first");
   if (p.riddles >= 10) a.add("riddle");
@@ -50,6 +64,28 @@ export function reconcile(p: Player): Player {
       ? p.characterId
       : null,
     learning: p.learning ?? { completed: [], dailyDates: [] },
+    tostik: {
+      seen: tostikEpisodes
+        .filter((e) => p.tostik?.seen?.includes(e.id))
+        .map((e) => e.id),
+      episode: filmEpisode,
+      frame: filmFrame,
+    },
+    adventure: {
+      completed: chapters
+        .filter((c, i) =>
+          chapters
+            .slice(0, i + 1)
+            .every((previous) => p.adventure?.completed?.includes(previous.id)),
+        )
+        .map((c) => c.id),
+      readTales: tales
+        .filter((t) => p.adventure?.readTales?.includes(t.id))
+        .map((t) => t.id),
+      favorites: tales
+        .filter((t) => p.adventure?.favorites?.includes(t.id))
+        .map((t) => t.id),
+    },
     unlocked,
     achievements: [...a],
     daily:
