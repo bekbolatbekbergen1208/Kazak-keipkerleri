@@ -14,7 +14,13 @@ test("animated tale follows 18 episodes, can pause, has a source and saves progr
   ).toBeVisible();
   await expect(page.locator(".cinema-episode-list > button")).toHaveCount(18);
   await expect(
-    page.getByRole("link", { name: "ТОЛЫҚ ЕРТЕГІНІ ОҚУ" }),
+    page.getByRole("link", { name: "ТОЛЫҚ ЕРТЕГІНІ ОҚУ", exact: true }),
+  ).toHaveAttribute("href", "/ertostik/full");
+  await expect(
+    page.getByRole("link", {
+      name: "Кітапханадағы толық мәтін ↗",
+      exact: true,
+    }),
   ).toHaveAttribute(
     "href",
     "https://www.pushkinlibrary.kz/exhibitions/bayterek_kaz/Er-Tostik.htm",

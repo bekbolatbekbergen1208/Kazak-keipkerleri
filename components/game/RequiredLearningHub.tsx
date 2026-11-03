@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { accountRequest, answerOnServer } from "@/lib/account-client";
+import PlatformIcon from "./PlatformIcon";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, RotateCcw, Star } from "lucide-react";
 import { heroes } from "@/data/content";
 import {
@@ -80,6 +82,57 @@ export default function RequiredLearningHub() {
   const [correct, setCorrect] = useState(false);
   const [finished, setFinished] = useState(false);
   const [completed, setCompleted] = useState<RequiredKind[]>([]);
+  const [registered, setRegistered] = useState(false);
+  const [serverMessage, setServerMessage] = useState("");
+  const [serverSaving, setServerSaving] = useState(false);
+  const [serverFailed, setServerFailed] = useState(false);
+  const [lastAnswer, setLastAnswer] = useState<number | null>(null);
+  const attemptId = useRef("");
+  function saveAnswer(kind: RequiredKind, index: number, answer: number) {
+    setLastAnswer(answer);
+    setServerSaving(true);
+    setServerFailed(false);
+    setServerMessage("Сақталуда...");
+    void answerOnServer(kind, index, answer, attemptId.current)
+      .then((result) => {
+        setCompleted(result.completed);
+        setServerMessage("Жауабың серверге сақталды.");
+      })
+      .catch(() => {
+        setServerFailed(true);
+        setServerMessage("Жауап серверге сақталмады. Қайта сақтап көр.");
+      })
+      .finally(() => setServerSaving(false));
+  }
+  useEffect(() => {
+    let active = true;
+    const refresh = () =>
+      void accountRequest("session")
+        .then((session) => {
+          if (active) {
+            setRegistered(Boolean(session.user));
+            if (session.user) setCompleted(session.completed);
+            else {
+              try {
+                setCompleted(
+                  JSON.parse(
+                    localStorage.getItem("qazaq-required-learning-v1") ?? "[]",
+                  ),
+                );
+              } catch {
+                setCompleted([]);
+              }
+            }
+          }
+        })
+        .catch(() => {});
+    refresh();
+    window.addEventListener("qazaq-account-change", refresh);
+    return () => {
+      active = false;
+      window.removeEventListener("qazaq-account-change", refresh);
+    };
+  }, []);
   useEffect(() => {
     try {
       const saved = JSON.parse(
@@ -98,6 +151,8 @@ export default function RequiredLearningHub() {
     setStep(0);
     setCorrect(false);
     setFinished(false);
+    setServerFailed(false);
+    setServerMessage("");
   }
   function next() {
     if (!active || !correct) return;
@@ -147,7 +202,7 @@ export default function RequiredLearningHub() {
             aria-pressed={active === item.id}
           >
             <span className="required-card-icon" aria-hidden="true">
-              {item.icon}
+              {<PlatformIcon name={item.icon} />}
             </span>
             <small>0{i + 1} · 6 ТАПСЫРМА</small>
             <h3>{item.title}</h3>
@@ -181,11 +236,21 @@ export default function RequiredLearningHub() {
             </span>
           </div>
           <h2>{activity.title}</h2>
+          {registered && (
+            <p className="server-learning-status" role="status">
+              {serverMessage ||
+                "Аккаунтқа қосылды · Нәтижелер серверге жиналады"}
+            </p>
+          )}
           {finished ? (
             <div className="required-finish">
               <Star size={40} />
               <h3>Жарайсың! 6 тапсырманы орындадың.</h3>
-              <p>Бұл бөлімнің аяқталғаны осы браузерде сақталды.</p>
+              <p>
+                {registered
+                  ? "Нәтижелер аккаунтыңа және әкімші статистикасына сақталады."
+                  : "Бұл бөлімнің аяқталғаны осы браузерде сақталды. Аккаунтқа кірсең, нәтижелер серверге жиналады."}
+              </p>
               <button className="gold-button" onClick={() => open(active)}>
                 <RotateCcw size={17} /> Қайта орындау
               </button>
@@ -202,11 +267,26 @@ export default function RequiredLearningHub() {
               <LearningQuestion
                 key={`${active}-${step}`}
                 item={requiredQuestions[active][step]}
+                disabled={serverSaving}
                 onCorrect={() => setCorrect(true)}
+                onAnswer={(answer) => {
+                  if (registered) {
+                    attemptId.current = crypto.randomUUID();
+                    saveAnswer(active, step, answer);
+                  }
+                }}
               />
+              {serverFailed && lastAnswer !== null && (
+                <button
+                  className="outline-button"
+                  onClick={() => saveAnswer(active, step, lastAnswer)}
+                >
+                  Жауапты қайта сақтау
+                </button>
+              )}
               <button
                 className="gold-button required-next"
-                disabled={!correct}
+                disabled={!correct || serverSaving || serverFailed}
                 onClick={next}
               >
                 {step + 1 === requiredQuestions[active].length

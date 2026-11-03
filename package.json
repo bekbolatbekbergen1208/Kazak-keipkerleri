@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "test:game": "tsx --test tests/*.test.ts",
     "test:e2e": "playwright test",
-    "seed:sql": "tsx scripts/seed.ts"
+    "seed:sql": "tsx scripts/seed.ts",
+    "admin:create": "node --import tsx scripts/create-admin.ts",
+    "test:accounts": "playwright test --config=playwright.accounts.config.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
@@ -32,5 +34,8 @@
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

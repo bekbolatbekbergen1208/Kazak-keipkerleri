@@ -1,4 +1,5 @@
 "use client";
+import PlatformIcon from "./PlatformIcon";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
@@ -217,12 +218,7 @@ export default function StoryAdventure({
             немесе керек эпизодты таңда.
           </p>
         </div>
-        <a
-          className="outline-button"
-          href={tostikSource.url}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a className="outline-button" href="/ertostik/full">
           <BookOpen size={18} />
           ТОЛЫҚ ЕРТЕГІНІ ОҚУ
           <ExternalLink size={16} />
@@ -367,7 +363,7 @@ export default function StoryAdventure({
       </div>
       {finished && (
         <div className="cinema-finale">
-          <span aria-hidden="true">🌟</span>
+          <span aria-hidden="true">{<PlatformIcon name="trophy" />}</span>
           <h2>Ертегі аяқталды!</h2>
           <p>
             Ер Төстік жақындарына қайта оралды. Сен оның батылдық, адалдық және

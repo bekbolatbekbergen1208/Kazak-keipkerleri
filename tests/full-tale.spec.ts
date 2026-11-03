@@ -10,6 +10,10 @@ test("full Kazakh tale has real narration, controls, continuation and all text",
   await expect(page.locator(".full-tale-text")).toContainText(
     "Ерте заманда Ерназар",
   );
+  await expect(page.locator(".full-tale-text")).toContainText(
+    "мақсаттарына жетеді.",
+  );
+  await expect(page.locator(".full-continuous-text > section")).toHaveCount(37);
   await page.getByRole("button", { name: "ДАУЫСТАП ОҚУ", exact: true }).click();
   await page.waitForFunction(() => {
     const a = document.querySelector("audio");
@@ -21,7 +25,9 @@ test("full Kazakh tale has real narration, controls, continuation and all text",
   ).toBe(true);
   await page.getByLabel("Толық ертегіні оқу жылдамдығы").selectOption("1.2");
   await page.getByLabel("Ертегінің оқу бөлігін таңдау").selectOption("2");
-  await expect(page.locator(".full-reading-number")).toHaveText("3 / 37");
+  await expect(
+    page.locator(".active-reading-section .full-section-label > span"),
+  ).toHaveText("3 / 37");
   await page.waitForFunction(() => {
     const a = document.querySelector("audio");
     return a && a.readyState >= 1 && a.currentSrc.includes("section-003");
@@ -51,8 +57,7 @@ test("full Kazakh tale has real narration, controls, continuation and all text",
     "3",
   );
   await page.getByRole("button", { name: "КІДІРТУ", exact: true }).click();
-  await page.locator(".full-tale-all summary").click();
-  await expect(page.locator(".full-tale-all")).toContainText(
+  await expect(page.locator(".full-tale-text")).toContainText(
     "мақсаттарына жетеді.",
   );
   expect(

@@ -1,4 +1,5 @@
 "use client";
+import PlatformIcon from "./PlatformIcon";
 import { useState } from "react";
 import { ArrowLeft, ArrowRight, Check, Star, Trophy } from "lucide-react";
 import HeroArtwork from "@/components/heroes/HeroArtwork";
@@ -37,7 +38,7 @@ export function LearningPreview({
         {learningActivities.map((activity) => (
           <button key={activity.id} onClick={onOpen}>
             <span className="learning-icon" aria-hidden="true">
-              {activity.icon}
+              {<PlatformIcon name={activity.icon} />}
             </span>
             <strong>{activity.title}</strong>
             <span>{activity.subtitle}</span>
@@ -97,7 +98,7 @@ export default function LearningClub({
         </p>
         <div className="learning-daily">
           <span className="learning-icon" aria-hidden="true">
-            ☀️
+            {<PlatformIcon name="sun" />}
           </span>
           <div>
             <strong>Бүгінгі тапсырма</strong>
@@ -120,7 +121,7 @@ export default function LearningClub({
           {learningActivities.map((a) => (
             <article key={a.id} className="learning-activity">
               <span className="learning-icon" aria-hidden="true">
-                {a.icon}
+                {<PlatformIcon name={a.icon} />}
               </span>
               <h2>{a.title}</h2>
               <p>{a.subtitle}</p>
@@ -178,7 +179,7 @@ export default function LearningClub({
         {finished ? (
           <div className="learning-finish">
             <span className="learning-finish-star" aria-hidden="true">
-              🌟
+              {<PlatformIcon name="trophy" />}
             </span>
             <h1>Жарайсың, жас қаһарман!</h1>
             <p>

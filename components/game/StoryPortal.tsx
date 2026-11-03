@@ -1,3 +1,4 @@
+import PlatformIcon from "./PlatformIcon";
 import { ArrowRight, BookOpen, Compass } from "lucide-react";
 import HeroArtwork from "@/components/heroes/HeroArtwork";
 import { tostikEpisodes, tostikSource } from "@/data/tostik";
@@ -51,7 +52,7 @@ export default function StoryPortal({
           </span>
         ))}
         <div className="story-open-book" aria-hidden="true">
-          📖
+          {<PlatformIcon name="book" />}
         </div>
       </div>
     </section>

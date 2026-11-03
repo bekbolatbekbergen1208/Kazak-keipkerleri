@@ -1,4 +1,5 @@
 "use client";
+import PlatformIcon from "./PlatformIcon";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, MotionConfig } from "framer-motion";
@@ -63,6 +64,7 @@ import {
   levelFor,
   reconcile,
 } from "@/lib/progression";
+import { accountRequest, type ServerUser } from "@/lib/account-client";
 import { supabase } from "@/lib/supabase";
 import { playEffect, type SoundSettings } from "@/lib/sound";
 import type { GameKind, Hero, Mission, Player } from "@/types/game";
@@ -118,6 +120,10 @@ export default function Game({
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
   const [authMessage, setAuthMessage] = useState("");
   const [userId, setUserId] = useState<string | null>(null);
+  const [serverUser, setServerUser] = useState<ServerUser | null>(null);
+  const [accountReady, setAccountReady] = useState(false);
+  const [authBusy, setAuthBusy] = useState(false);
+  const [saveRevision, setSaveRevision] = useState(0);
   const [syncStatus, setSyncStatus] = useState("Қонақ режимі");
   const [sound, setSound] = useState<SoundSettings>({
     music: false,
@@ -138,61 +144,68 @@ export default function Game({
       } catch {}
       setLoaded(true);
     });
-    if (!supabase) return;
-    const client = supabase;
-    const load = async (id: string) => {
-      const { data, error } = await client
-        .from("profiles")
-        .select("game_state")
-        .eq("id", id)
-        .single();
-      if (data?.game_state) {
-        setPlayer(reconcile(data.game_state as Player));
-        setStarted(true);
-      }
-      setUserId(id);
-      setSyncStatus(
-        error && error.code !== "PGRST116"
-          ? "Сақтауды тексеріңіз"
-          : "Бұлтқа қосылды",
-      );
+    let active = true;
+    void accountRequest("session")
+      .then((session) => {
+        if (!active) return;
+        if (session.user) {
+          setServerUser(session.user);
+          setUserId(session.user.id);
+          setPlayer(
+            reconcile({
+              ...freshPlayer(),
+              ...(session.state ?? {}),
+              name: session.state?.name ?? session.user.name,
+            }),
+          );
+          setStarted(true);
+          setSyncStatus("Серверге қосылды");
+          localStorage.setItem(
+            "qazaq-required-learning-v1",
+            JSON.stringify(session.completed),
+          );
+          window.dispatchEvent(new Event("qazaq-account-change"));
+        }
+      })
+      .catch(() => {
+        if (active) setSyncStatus("Сервермен байланыс жоқ");
+      })
+      .finally(() => {
+        if (active) setAccountReady(true);
+      });
+    return () => {
+      active = false;
     };
-    void client.auth.getSession().then(({ data }) => {
-      if (data.session) void load(data.session.user.id);
-    });
-    const { data } = client.auth.onAuthStateChange((_event, session) => {
-      if (session) setTimeout(() => void load(session.user.id), 0);
-      else {
-        setUserId(null);
-        setSyncStatus("Қонақ режимі");
-      }
-    });
-    return () => data.subscription.unsubscribe();
   }, []);
   useEffect(() => {
     if (!loaded || !started) return;
     localStorage.setItem("qazaq-player", JSON.stringify(player));
-    if (!supabase || !userId) return;
-    const client = supabase;
+    if (!accountReady || !userId) return;
+    let active = true;
+    let retry: ReturnType<typeof setTimeout> | undefined;
     const id = setTimeout(() => {
-      void client
-        .from("profiles")
-        .upsert({
-          id: userId,
-          username: player.name,
-          avatar: player.avatar,
-          level: levelFor(player.xp),
-          xp: player.xp,
-          coins: player.coins,
-          hero_stats: player.stats,
-          game_state: player,
+      void accountRequest("state", { state: player })
+        .then(() => {
+          if (active) setSyncStatus("Серверге сақталды");
         })
-        .then(({ error }) =>
-          setSyncStatus(error ? "Бұлтқа сақтау сәтсіз" : "Бұлтқа сақталды"),
-        );
+        .catch(() => {
+          if (active) {
+            setSyncStatus("Сақтау сәтсіз. Қайта байланысқанда жалғасады.");
+            retry = setTimeout(() => setSaveRevision((n) => n + 1), 15_000);
+          }
+        });
     }, 600);
-    return () => clearTimeout(id);
-  }, [player, loaded, started, userId]);
+    return () => {
+      active = false;
+      clearTimeout(id);
+      if (retry) clearTimeout(retry);
+    };
+  }, [player, loaded, started, userId, accountReady, saveRevision]);
+  useEffect(() => {
+    const retry = () => setSaveRevision((n) => n + 1);
+    window.addEventListener("online", retry);
+    return () => window.removeEventListener("online", retry);
+  }, []);
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 4500);
@@ -288,26 +301,59 @@ export default function Game({
     next = levelFloor(level + 1);
   const percent = ((player.xp - floor) / (next - floor)) * 100;
   async function auth(form: FormData) {
-    if (!supabase) {
-      setAuthMessage(
-        "Қонақ режимі дайын. Онлайн аккаунт үшін Supabase баптауы қажет.",
+    if (authBusy) return;
+    setAuthBusy(true);
+    setAuthMessage("");
+    try {
+      const session = await accountRequest(
+        authMode === "login" ? "login" : "register",
+        {
+          email: String(form.get("email")),
+          password: String(form.get("password")),
+          name: String(form.get("name") ?? player.name),
+          ...(authMode === "signup" ? { state: player } : {}),
+        },
       );
-      return;
+      if (!session.user) throw new Error("Аккаунт ашылмады.");
+      setServerUser(session.user);
+      setUserId(session.user.id);
+      setAccountReady(true);
+      setPlayer(
+        reconcile({
+          ...freshPlayer(),
+          ...(session.state ?? {}),
+          name: session.state?.name ?? session.user.name,
+        }),
+      );
+      setStarted(true);
+      setSyncStatus("Серверге қосылды");
+      localStorage.setItem(
+        "qazaq-required-learning-v1",
+        JSON.stringify(session.completed),
+      );
+      window.dispatchEvent(new Event("qazaq-account-change"));
+      setModal(null);
+    } catch (error) {
+      setAuthMessage(error instanceof Error ? error.message : "Қате шықты.");
+    } finally {
+      setAuthBusy(false);
     }
-    const email = String(form.get("email")),
-      password = String(form.get("password"));
-    const { error } =
-      authMode === "login"
-        ? await supabase.auth.signInWithPassword({ email, password })
-        : await supabase.auth.signUp({ email, password });
-    setAuthMessage(
-      error
-        ? error.message
-        : authMode === "signup"
-          ? "Поштаңдағы растау сілтемесін аш."
-          : "Аккаунтқа кірдің.",
-    );
-    if (!error && authMode === "login") setModal(null);
+  }
+  async function signOut() {
+    try {
+      await accountRequest("logout", {});
+      setUserId(null);
+      setServerUser(null);
+      setPlayer(freshPlayer());
+      setStarted(false);
+      setSyncStatus("Қонақ режимі");
+      localStorage.removeItem("qazaq-player");
+      localStorage.removeItem("qazaq-required-learning-v1");
+      window.dispatchEvent(new Event("qazaq-account-change"));
+      setModal(null);
+    } catch {
+      setAuthMessage("Аккаунттан шығу мүмкін болмады. Қайта байқап көр.");
+    }
   }
   return (
     <GameCharacterContext.Provider
@@ -393,6 +439,18 @@ export default function Game({
             <button disabled={!loaded} onClick={() => navigate("library")}>
               ЕРТЕГІЛЕР <BookOpen size={16} />
             </button>
+            <button
+              className="account-entry"
+              disabled={!accountReady}
+              onClick={() => setModal("auth")}
+            >
+              {userId ? "Аккаунт" : "Кіру / Тіркелу"}
+            </button>
+            {serverUser?.role === "admin" && (
+              <a className="admin-entry" href="/admin">
+                Әкімші
+              </a>
+            )}
             <span>
               {player.tostik.seen.length} / {tostikEpisodes.length} эпизод ·{" "}
               {player.adventure.readTales.length} ертегі оқылды
@@ -544,7 +602,9 @@ export default function Game({
                         className="quest-game-card"
                         onClick={() => setQuestGame(game.id)}
                       >
-                        <span aria-hidden="true">{game.icon}</span>
+                        <span aria-hidden="true">
+                          {<PlatformIcon name={game.icon} />}
+                        </span>
                         <h3>{game.title}</h3>
                         <p>{game.description}</p>
                         <strong>
@@ -1483,14 +1543,19 @@ export default function Game({
                     </h2>
                     {userId ? (
                       <>
-                        <p>Прогресс аккаунтыңа сақталады.</p>
+                        <p>
+                          {serverUser?.email} · Прогресс сервердегі аккаунтыңа
+                          сақталады.
+                        </p>
+                        {serverUser?.role === "admin" && (
+                          <a className="outline-button" href="/admin">
+                            Әкімші панелі
+                          </a>
+                        )}
+                        {authMessage && <p role="status">{authMessage}</p>}
                         <button
                           className="outline-button"
-                          onClick={() =>
-                            void supabase?.auth
-                              .signOut()
-                              .then(() => setModal(null))
-                          }
+                          onClick={() => void signOut()}
                         >
                           Аккаунттан шығу
                         </button>
@@ -1498,6 +1563,23 @@ export default function Game({
                     ) : (
                       <>
                         <form action={auth}>
+                          {authMode === "signup" && (
+                            <label>
+                              Атың
+                              <input
+                                name="name"
+                                minLength={2}
+                                maxLength={24}
+                                required
+                                autoComplete="nickname"
+                                defaultValue={
+                                  player.name === "Жас қаһарман"
+                                    ? ""
+                                    : player.name
+                                }
+                              />
+                            </label>
+                          )}
                           <label>
                             Email
                             <input
@@ -1512,7 +1594,8 @@ export default function Game({
                             <input
                               name="password"
                               type="password"
-                              minLength={8}
+                              maxLength={128}
+                              minLength={authMode === "signup" ? 10 : 1}
                               required
                               autoComplete={
                                 authMode === "login"
@@ -1521,8 +1604,16 @@ export default function Game({
                               }
                             />
                           </label>
-                          <button className="gold-button full" type="submit">
-                            {authMode === "login" ? "КІРУ" : "ТІРКЕЛУ"}
+                          <button
+                            className="gold-button full"
+                            type="submit"
+                            disabled={authBusy}
+                          >
+                            {authBusy
+                              ? "КҮТЕ ТҰР..."
+                              : authMode === "login"
+                                ? "КІРУ"
+                                : "ТІРКЕЛУ"}
                           </button>
                         </form>
                         <button

@@ -16,26 +16,26 @@ export const requiredActivities: {
     id: "recognize",
     title: "Батырды таны",
     description: "Суретке қарап, алты кейіпкердің атын тап.",
-    icon: "🖼️",
+    icon: "recognize",
   },
   {
     id: "traits",
     title: "Кейіпкердің қасиетін тап",
     description: "Батырдың қабілеті мен жақсы қасиетін анықта.",
-    icon: "✨",
+    icon: "traits",
   },
   {
     id: "national",
     title: "Ұлттық ойын",
     description:
       "Асық ату, тоғызқұмалақ, арқан тарту туралы жеңіл тапсырмалар.",
-    icon: "🧿",
+    icon: "national",
   },
   {
     id: "quiz",
     title: "Біліміңді сына",
     description: "Ертегі, достық және ұлттық дәстүр туралы викторина.",
-    icon: "🏆",
+    icon: "quiz",
   },
 ];
 const traits = [

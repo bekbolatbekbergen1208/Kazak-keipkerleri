@@ -23,19 +23,19 @@ export const questGames = [
   {
     id: "trail" as const,
     title: "Құпия жол",
-    icon: "🧭",
+    icon: "trail",
     description: "Кейіпкерді қауіпсіз соқпақпен қақпаға жеткіз.",
   },
   {
     id: "sequence" as const,
     title: "Сиқырлы белгілер",
-    icon: "✨",
+    icon: "magic",
     description: "Белгілердің ретін есте сақтап, қайталап көрсет.",
   },
   {
     id: "words" as const,
     title: "Сөзден сыр құра",
-    icon: "📜",
+    icon: "words",
     description: "Шашылған сөздерді жинап, мағыналы сөйлем жаса.",
   },
 ];

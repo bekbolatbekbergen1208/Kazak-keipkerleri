@@ -1,3 +1,4 @@
+import AccountPresence from "@/components/game/AccountPresence";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./theme.css";
@@ -48,6 +49,7 @@ export default function RootLayout({
             </filter>
           </defs>
         </svg>
+        <AccountPresence />
         {children}
       </body>
     </html>

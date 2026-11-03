@@ -1,4 +1,5 @@
 "use client";
+import PlatformIcon from "./PlatformIcon";
 import { useState } from "react";
 import {
   ArrowLeft,
@@ -201,7 +202,14 @@ export default function FairyLibrary({
         Ертегі — қиялға қанат бітіретін әңгіме. Одан достықты, ақылды және жақсы
         әрекетті танимыз.
       </p>
-      <a className="full-tale-entry" href="/ertostik/full"><BookOpen size={24}/><span><strong>Ер Төстік — толық мәтін және дыбыстау</strong><small>Ертегіні қысқартусыз оқы немесе қазақша тыңда</small></span><ArrowRight size={20}/></a>
+      <a className="full-tale-entry" href="/ertostik/full">
+        <BookOpen size={24} />
+        <span>
+          <strong>Ер Төстік — толық мәтін және дыбыстау</strong>
+          <small>Ертегіні қысқартусыз оқы немесе қазақша тыңда</small>
+        </span>
+        <ArrowRight size={20} />
+      </a>
       <div className="tale-types">
         {taleTypes.map((type) => (
           <button
@@ -209,7 +217,7 @@ export default function FairyLibrary({
             className={filter === type.title ? "active" : ""}
             onClick={() => setFilter(type.title)}
           >
-            <span aria-hidden="true">{type.icon}</span>
+            <span aria-hidden="true">{<PlatformIcon name={type.icon} />}</span>
             <h2>{type.title}</h2>
             <p>{type.text}</p>
           </button>
@@ -261,7 +269,7 @@ export default function FairyLibrary({
         {filtered.map((t) => (
           <article key={t.id} className="tale-book">
             <div className={`tale-book-cover book-${t.id}`}>
-              <span aria-hidden="true">{t.icon}</span>
+              <span aria-hidden="true">{<PlatformIcon name={t.icon} />}</span>
               <small>{t.type}</small>
               <strong>{t.title}</strong>
               <button

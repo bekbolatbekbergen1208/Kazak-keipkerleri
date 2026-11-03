@@ -81,6 +81,9 @@ export default function FullTaleReader() {
     setElapsed(0);
     setError("");
     setSection(index);
+    document
+      .getElementById(`tale-section-${index}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
   function toggle() {
     if (playing) {
@@ -242,15 +245,42 @@ export default function FullTaleReader() {
         </div>
       </div>
       <article
-        className={`full-tale-text ${playing ? "is-reading" : ""}`}
+        className="full-tale-text full-continuous-text"
         style={{ fontSize: font }}
         aria-label="Ертегінің толық мәтіні"
       >
-        <span className="full-reading-number">
-          {section + 1} / {tale.sections.length}
-        </span>
-        {tale.sections[section].paragraphs.map((paragraph, i) => (
-          <p key={`${section}-${i}`}>{paragraph}</p>
+        <div className="full-reading-caption">
+          <strong>Ертегінің толық мәтіні</strong>
+          <a href="/texts/er-tostik.txt" download="Ер Төстік.txt">
+            Мәтінді жүктеу
+          </a>
+          <span>Қысқартусыз · басынан аяғына дейін</span>
+        </div>
+        {tale.sections.map((item, index) => (
+          <section
+            key={index}
+            id={`tale-section-${index}`}
+            className={section === index ? "active-reading-section" : ""}
+            aria-label={`${index + 1}-оқу бөлігі`}
+          >
+            <div className="full-section-label">
+              <span>
+                {index + 1} / {tale.sections.length}
+              </span>
+              <button
+                className="text-button"
+                onClick={() => {
+                  go(index);
+                  setPlaying(true);
+                }}
+              >
+                Осы жерден тыңдау <Play size={14} />
+              </button>
+            </div>
+            {item.paragraphs.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+          </section>
         ))}
       </article>
       <div className="full-reader-pages">
@@ -272,17 +302,6 @@ export default function FullTaleReader() {
           Келесі бөлік <ArrowRight size={18} />
         </button>
       </div>
-      <details className="full-tale-all">
-        <summary>Ертегіні бір бетте толық көрсету</summary>
-        {tale.sections.map((item, i) => (
-          <section key={i}>
-            <h2>{i + 1}-бөлік</h2>
-            {item.paragraphs.map((p, j) => (
-              <p key={j}>{p}</p>
-            ))}
-          </section>
-        ))}
-      </details>
     </main>
   );
 }

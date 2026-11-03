@@ -6,3 +6,7 @@ node_modules/
 test-results/
 playwright-report/
 tests/artifacts/
+storage/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, statSync } from "node:fs";
+import { existsSync, statSync, readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import tale from "../data/tostik-full.json";
 import narration from "../data/tostik-full-audio.json";
@@ -30,4 +30,19 @@ test("full folk tale includes the beginning, ending and all audio sections", () 
     assert.ok(statSync(`public${clip.src}`).size > 1024);
     assert.ok(clip.duration > 1);
   }
+});
+
+test("reader contains the exact complete submitted story", () => {
+  const supplied = readFileSync("public/texts/er-tostik.txt", "utf8");
+  const body = supplied
+    .slice(supplied.indexOf("Ерте заманда"))
+    .trim()
+    .replace(/\s+/g, " ");
+  assert.equal(
+    tale.sections
+      .flatMap((s) => s.paragraphs)
+      .join(" ")
+      .replace(/\s+/g, " "),
+    body,
+  );
 });
